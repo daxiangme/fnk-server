@@ -8,10 +8,10 @@
       <n-tag type="primary">2023年12月28日15:09:22</n-tag>
     </n-descriptions-item>
     <n-descriptions-item label="Github地址">
-      <a class="text-primary" href="https://github.com/EnigmaGuest/fnk-server" target="_blank">Github地址</a>
+      <a class="text-primary" href="https://github.com/daxiangme/fnk-server" target="_blank">Github地址</a>
     </n-descriptions-item>
     <n-descriptions-item label="预览地址">
-      <a class="text-primary" href="https://fnk-server.isite.fun" target="_blank">已部署</a>
+      <a class="text-primary" href="https://fnk-server.isite.fun" target="_blank">失效了</a>
     </n-descriptions-item>
   </n-descriptions>
 </n-card>
