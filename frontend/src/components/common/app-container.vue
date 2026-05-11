@@ -1,5 +1,5 @@
 <template>
-  <div :style="style" class="w-full flex-col " :class="{'bg-#fff dark:bg-dark':!props.transparent}">
+  <div  class="w-full flex-col  flex-1" >
     <slot></slot>
   </div>
 

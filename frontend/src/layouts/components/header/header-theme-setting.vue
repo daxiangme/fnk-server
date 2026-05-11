@@ -1,108 +1,179 @@
 <template>
+  <!--  icon-park-solid:dark-mode-->
+  <base-hover-tip text="主题配置">
+    <div class="flex-center w-48px text-24px cursor-pointer " @click="drawerShow= true">
+      <icon-icon-park-solid:dark-mode/>
+    </div>
+  </base-hover-tip>
   <n-drawer v-model:show="drawerShow" :width="props.width" :placement="props.placement">
     <n-drawer-content title="主题设置">
       <n-space vertical>
         <n-divider><p>主题模式</p></n-divider>
         <div class="flex-col items-center">
-          <n-button-group>
-            <n-button round :type="theme.mode=='light'?'primary':'default'" @click="theme.setThemeMode('light')">
-              <template #icon>
-                <icon-line-md:sunny-filled-loop class="text-#FFCC00"/>
+          <n-tabs type="segment" animated v-model:value="theme.mode">
+            <n-tab-pane name="light">
+              <template #tab>
+                <icon-line-md:sunny-filled-loop class="text-#FFCC00 text-16px"/>
+                <p class="ml-6px">浅色</p>
               </template>
-              浅色
-            </n-button>
-            <n-button round :type="theme.mode=='dark'?'primary':'default'" @click="theme.setThemeMode('dark')">
-              <template #icon>
-                <icon-line-md:moon-filled-loop />
+            </n-tab-pane>
+            <n-tab-pane name="auto">
+              <template #tab>
+                <icon-line-md:light-dark-loop class="text-16px"/>
+                <p class="ml-6px">自动</p>
               </template>
-              深色
-            </n-button>
-          </n-button-group>
+            </n-tab-pane>
+            <n-tab-pane name="dark">
+              <template #tab>
+                <icon-line-md:moon-filled-loop class="text-16px"/>
+                <p class="ml-6px">深色</p>
+              </template>
+            </n-tab-pane>
+          </n-tabs>
+        </div>
 
-        </div>
-        <n-divider><p>跟随系统</p></n-divider>
-        <div class="flex items-center justify-between">
-          <p class="text-16px text-#666">是否跟随</p>
-          <n-switch :default-value="theme.auto" size="large"  @update:value="theme.setThemeAuto">
-            <template #checked-icon >
-             <icon-line-md:watch-loop class="text-primary"/>
-            </template>
-            <template #unchecked-icon>
-              <icon-line-md:light-dark-loop class="text-primary"/>
-            </template>
-            <template #checked>
-              自动
-            </template>
-            <template #unchecked>
-              手动
-            </template>
-          </n-switch>
-        </div>
-        <n-divider><p>主题颜色</p></n-divider>
-        <div class="flex-col w-full">
-          <n-grid :cols="8" :x-gap="8" :y-gap="12">
-            <n-grid-item v-for="color in theme.colorList" :key="color" class="flex-x-center" @click="theme.setThemeColor(color)">
-              <div class="flex-center w-20px h-20px rounded-2px shadow cursor-pointer" :style="{backgroundColor:color}">
-                <icon-line-md:confirm  v-if="color === theme.color" class="text-white"/>
+        <n-divider><p>布局模式</p></n-divider>
+        <div class="flex text-primary">
+          <n-grid x-gap="24" y-gap="24" :cols="2">
+            <n-gi>
+              <base-hover-tip text="基本布局" :hover-style="false">
+                <icon-local-layout-base
+                  class="p-4px border-2px  hover:border-primary rounded-6px text-100px"
+                  :class="[theme.layout.mode === 'base'?'border-primary':'border-transparent']"
+                  @click="theme.setLayoutMode('base')"/>
+              </base-hover-tip>
+            </n-gi>
+            <n-gi>
+              <base-hover-tip text="分离式卡片布局" :hover-style="false">
+                <icon-local-layout-card
+                  class="p-4px border-2px  hover:border-primary rounded-6px text-100px"
+                  :class="[theme.layout.mode === 'card'?'border-primary':'border-transparent']"
+                  @click="theme.setLayoutMode('card')"/>
+              </base-hover-tip>
+            </n-gi>
+            <n-gi span="2" v-if="theme.layout.mode==='card'">
+              <div class="flex items-center  justify-between">
+                <p class="text-16px  mr-12px">分离式卡片圆角(px)</p>
+                <n-input-number class="w-120px text-center" v-model:value="theme.layout.round" :step="2" :min="0"/>
               </div>
-            </n-grid-item>
+            </n-gi>
           </n-grid>
-          <n-color-picker class="mt-24px" :value="theme.color" :show-alpha="false" @update:value="theme.setThemeColor" />
         </div>
-        <n-divider><p>界面显示</p></n-divider>
+        <n-divider><p>菜单配置</p></n-divider>
         <div class="flex items-center justify-between">
-          <p class="text-16px text-#666">圆角大小(px)</p>
-          <n-input-number class="w-80px text-center" v-model:value="theme.round" :min="0"/>
+          <p class="text-16px">菜单布局</p>
+          <n-select class="w-120px text-center" v-model:value="theme.menu.layout" :options="menuLayoutOptions"
+                    placeholder="选择布局"></n-select>
+        </div>
+        <template v-if="theme.menu.layout === 'base'">
+          <div class="flex items-center justify-between mt-12px">
+            <p class="text-16px ">显示面包屑</p>
+            <n-switch v-model:value="theme.menu.showBreadcrumb">
+            </n-switch>
+          </div>
+          <div class="flex items-center justify-between mt-12px">
+            <p class="text-16px ">显示面包屑图标</p>
+            <n-switch v-model:value="theme.menu.showBreadcrumbIcon">
+            </n-switch>
+          </div>
+        </template>
+        <div class="flex items-center justify-between mt-12px">
+          <p class="text-16px">头部高度</p>
+          <n-input-number class="w-120px text-center" v-model:value="theme.menu.headerHeight" :min="44"/>
         </div>
         <div class="flex items-center justify-between mt-12px">
-          <p class="text-16px text-#666">头部圆角(px)</p>
-          <n-input-number class="w-80px text-center" v-model:value="theme.headerRound" :step="2" :min="0"/>
-        </div>
-        <div class="flex items-center justify-between mt-12px">
-          <p class="text-16px text-#666">折叠菜单</p>
-          <n-switch v-model:value="theme.collapsed" size="large" >
-            <template #unchecked-icon  >
-              <icon-line-md:menu-fold-right class="text-primary"/>
-            </template>
-            <template #checked-icon>
-              <icon-line-md:menu-fold-left class="text-primary"/>
-            </template>
-            <template #unchecked>
-              展开
-            </template>
-            <template #checked>
-              收起
-            </template>
-          </n-switch>
-        </div>
-        <n-divider><p>动画</p></n-divider>
-        <div class="flex items-center justify-between">
-          <p class="text-16px text-#666">过渡动画</p>
-          <n-switch v-model:value="theme.isAnimate" size="large" >
-            <template #checked>
-              开启
-            </template>
-            <template #unchecked>
-              关闭
-            </template>
-            <template #checked-icon >
-              <icon-line-md:lightbulb-twotone class="text-primary" />
-            </template>
-            <template #unchecked-icon>
-              <icon-line-md:lightbulb-off-loop class="text-primary"/>
-            </template>
+          <p class="text-16px ">显示标签栏</p>
+          <n-switch v-model:value="theme.menu.showTabs">
           </n-switch>
         </div>
         <div class="flex items-center justify-between mt-12px">
-          <p class="text-16px text-#666">动画效果(开启生效)</p>
-          <n-select class="w-120px text-center" v-model:value="theme.animation" :options="animationOptions" placeholder="选择效果" ></n-select>
+          <p class="text-16px">标签栏高度</p>
+          <n-input-number class="w-120px text-center" v-model:value="theme.menu.tabsHeight" :min="32"/>
+        </div>
+        <div class="flex items-center justify-between mt-12px">
+          <p class="text-16px ">显示折叠</p>
+          <n-switch v-model:value="theme.menu.showCollapse">
+          </n-switch>
+        </div>
+        <n-divider><p>颜色色配置</p></n-divider>
+        <div class="flex items-center justify-between">
+          <p class="text-16px ">主题色</p>
+          <n-color-picker  class="w-120px" v-model:value="theme.color.primary" :show-alpha="false" :swatches="theme.color.swatches" />
+        </div>
+        <div class="flex items-center justify-between">
+          <p class="text-16px ">信息色</p>
+          <n-color-picker  class="w-120px" v-model:value="theme.color.info" :show-alpha="false" :swatches="theme.color.swatches" />
+        </div>
+        <div class="flex items-center justify-between">
+          <p class="text-16px ">成功色</p>
+          <n-color-picker  class="w-120px" v-model:value="theme.color.success" :show-alpha="false" :swatches="theme.color.swatches" />
+        </div>
+        <div class="flex items-center justify-between">
+          <p class="text-16px ">警告色</p>
+          <n-color-picker  class="w-120px" v-model:value="theme.color.warning" :show-alpha="false" :swatches="theme.color.swatches" />
+        </div>
+        <div class="flex items-center justify-between">
+          <p class="text-16px ">错误色</p>
+          <n-color-picker  class="w-120px" v-model:value="theme.color.error" :show-alpha="false"  :swatches="theme.color.swatches" />
+        </div>
+        <n-divider><p>侧边栏配置</p></n-divider>
+        <div class="flex items-center justify-between">
+          <p class="text-16px ">侧边栏深色</p>
+          <n-switch v-model:value="theme.sider.inverted">
+          </n-switch>
+        </div>
+        <div class="flex items-center justify-between mt-12px">
+          <p class="text-16px ">侧边栏折叠</p>
+          <n-switch v-model:value="theme.sider.collapsed">
+          </n-switch>
+        </div>
+        <div class="flex items-center justify-between mt-12px">
+          <p class="text-16px">折叠宽度</p>
+          <n-input-number class="w-120px text-center" v-model:value="theme.sider.collapsedWidth" :min="64"/>
+        </div>
+        <div class="flex items-center justify-between mt-12px">
+          <p class="text-16px ">展开宽度</p>
+          <n-input-number class="w-120px text-center" v-model:value="theme.sider.width" :min="200"/>
+        </div>
+        <div class="flex items-center justify-between mt-12px">
+          <p class="text-16px ">显示折叠操作条</p>
+          <n-switch v-model:value="theme.sider.showCollapse">
+          </n-switch>
+        </div>
+        <n-divider><p>动画配置</p></n-divider>
+        <div class="flex items-center justify-between">
+          <p class="text-16px ">过渡动画</p>
+          <n-switch v-model:value="theme.animate.enable"/>
+        </div>
+        <div class="flex items-center justify-between mt-12px">
+          <p class="text-16px ">动画效果</p>
+          <n-select class="w-120px text-center" v-model:value="theme.animate.type" :options="animationOptions"
+                    placeholder="选择效果"></n-select>
+        </div>
+
+        <n-divider><p>底部配置</p></n-divider>
+        <div class="flex items-center justify-between">
+          <p class="text-16px ">显示底部</p>
+          <n-switch v-model:value="theme.footer.show"/>
+        </div>
+        <div class="flex items-center justify-between mt-12px">
+          <p class="text-16px ">底部高度</p>
+          <n-input-number class="w-120px text-center" v-model:value="theme.footer.height" :min="44"/>
+        </div>
+        <n-divider><p>naive-ui配置</p></n-divider>
+        <div class="flex items-center justify-between">
+          <p class="text-16px ">全局圆角</p>
+          <n-input-number class="w-120px text-center" v-model:value="theme.naive.borderRadius" :min="0"/>
         </div>
       </n-space>
+      <template #footer>
+        <n-button type="warning" @click="theme.resetThemeStore()">重置主题样式</n-button>
+      </template>
     </n-drawer-content>
   </n-drawer>
 </template>
 <script setup lang="ts">
-import {computed} from "vue";
+import {computed, ref} from "vue";
 import {useThemeStore} from "@/store";
 import {isWhiteColor} from "@/utils";
 
@@ -121,32 +192,35 @@ const props = defineProps({
   }
 })
 const emits = defineEmits(['update:show'])
-const drawerShow = computed({
-  get() {
-    return props.show
-  },
-  set(val) {
-    emits('update:show', val)
-  }
-})
+const drawerShow = ref(false)
 const theme = useThemeStore()
 /**
  * 过渡动画类型
- * - zoom-fade: 渐变
- * - zoom-out: 闪现
- * - fade-slide: 滑动
- * - fade: 消退
- * - fade-bottom: 底部消退
- * - fade-scale: 缩放消退
+ * 过渡动画类型
+ * fade-slide 滑动
+ * fade 淡入淡出
+ * fade-bottom 底部消退
+ * fade-scale 缩放消退
+ * zoom-fade 渐变
+ * zoom-out 闪现
+ * none 无动画
  */
+
 const animationOptions = [
-  {label: '渐变', value: 'zoom-fade'},
-  {label: '闪现', value: 'zoom-out'},
   {label: '滑动', value: 'fade-slide'},
-  {label: '消退', value: 'fade'},
+  {label: '淡入淡出', value: 'fade'},
   {label: '底部消退', value: 'fade-bottom'},
   {label: '缩放消退', value: 'fade-scale'},
+  {label: '渐变', value: 'zoom-fade'},
+  {label: '闪现', value: 'zoom-out'},
+  {label: '无动画', value: 'none'}
 ]
+
+const menuLayoutOptions = [
+  {label: '基本布局', value: 'base'},
+  {label: '应用布局', value: 'app'}
+]
+
 </script>
 
 <style scoped>

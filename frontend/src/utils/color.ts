@@ -34,7 +34,6 @@ type ColorIndex = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
  */
 export function getColorPalette(color: AnyColor, index: ColorIndex): string {
   const transformColor = colord(color);
-
   if (!transformColor.isValid()) {
     throw Error('invalid input color value');
   }

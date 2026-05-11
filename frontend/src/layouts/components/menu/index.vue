@@ -7,8 +7,9 @@
           :collapsed="props.collapsed"
           :options="menuOptions"
           :collapsed-icon-size="24"
-          :collapsed-width="64"
+          :collapsed-width="props.collapsedWidth"
           :indent="24"
+          :inverted="props.inverted"
           @update:value="clickMenuItem"
           @update:expanded-keys="menuExpanded"
           show-trigger/>
@@ -19,7 +20,7 @@ import {useRouteStore} from "@/store";
 import {useRoute, useRouter} from "vue-router";
 import {System} from "@/typings/system";
 
-const menuOptions = useRouteStore().menus
+const menuOptions = useRouteStore().menus as any
 const menuRef = ref()
 const route = useRoute();
 const router = useRouter();
@@ -33,6 +34,14 @@ const props = defineProps({
   mode:{
     type: String as PropType<"vertical" | "horizontal">,
     default: 'vertical',
+  },
+  inverted:{
+    type: Boolean,
+    default: false
+  },
+  collapsedWidth:{
+    type: Number,
+    default: 64
   }
 })
 // 菜单点击
@@ -64,7 +73,7 @@ const getActiveKeyPathsOfMenus = (activeKey: string, menus: System.GlobalMenu[])
   });
   return activeKeyPaths;
 };
-
+console.log(menuOptions)
 watch(
     () => route.name,
     () => {

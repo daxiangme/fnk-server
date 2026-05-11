@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.fnk</groupId>
+        <artifactId>app-server</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <artifactId>app-server-admin</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>com.fnk</groupId>
+            <artifactId>service-starter-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fnk</groupId>
+            <artifactId>app-system-biz</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
+                <configuration>
+                    <outputDirectory>${output-dir}</outputDirectory>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.fnk.app.admin.AdminApplication</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>.</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

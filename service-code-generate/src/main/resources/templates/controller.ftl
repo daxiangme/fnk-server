@@ -2,9 +2,9 @@ package ${package.Controller};
 
 import ${package.Service}.${table.serviceName};
 import ${package.Entity}.${entity};
-import fun.isite.service.common.db.dto.SplitPageDTO;
-import fun.isite.service.common.bean.http.RestResponse;
-import fun.isite.service.common.db.vo.PageVO;
+import com.fnk.common.db.dto.SplitPageDTO;
+import com.fnk.common.bean.http.RestResponse;
+import com.fnk.common.db.vo.PageVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -38,14 +38,14 @@ public class ${table.controllerName} extends ${superControllerClass} {
 public class ${table.controllerName} {
 </#if>
 
-	@Autowired
+    @Autowired
     private ${table.serviceName} service;
 
     @GetMapping
     @Operation(summary = "${table.comment!}列表")
     public RestResponse<PageVO<${entity}>> list(SplitPageDTO page,${entity} params) {
         return RestResponse.ok(this.service.basicPage(page, ${entity}::getCreateTime, (w) -> {
-            //TODO 此处应去除不需要的查询条件
+            // TODO 此处应去除不需要的查询条件
             <#list table.fields as field>
                 <#if field.propertyType == "boolean">
                     <#assign getprefix="is"/>
@@ -78,7 +78,7 @@ public class ${table.controllerName} {
     @PutMapping("/{id}")
     @Operation(summary = "更新指定ID的${table.comment!}")
     public RestResponse<${entity}> update(@PathVariable String id, @RequestBody @Validated ${entity} req) {
-        return RestResponse.ok(this.service.updateById(id, req));
+        return RestResponse.ok(this.service.update(id, req));
     }
 
     @DeleteMapping("/{id}")

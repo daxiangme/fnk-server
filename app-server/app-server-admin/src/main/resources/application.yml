@@ -1,0 +1,8 @@
+
+spring:
+  profiles:
+    active: @profile.active@
+  application:
+    name: app-server-admin
+server:
+  port: ${service.port.admin}

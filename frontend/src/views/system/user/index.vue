@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <BaseTable :columns="columns" :loading="pageState.loading" :data="pageState.tableData" :get-data="onGetData" :search-form-items="formFiledList"
-               is-add-action title="系统用户" desc="系统用户" @add="onAdd" @edit="onEdit" @delete="onDelete"/>
-    <user-drawer v-model:show="pageState.drawerVisible" :is-update="pageState.isUpdate" :data="pageState.editData"
-                 @success="onGetData"
-                 :form-items="formFiledList"></user-drawer>
-  </div>
+  <app-container>
+      <BaseTable :columns="columns" :loading="pageState.loading" :data="pageState.tableData" :get-data="onGetData" :search-form-items="formFiledList"
+                 is-add-action title="系统用户" desc="系统用户" @add="onAdd" @edit="onEdit" @delete="onDelete"/>
+      <user-drawer v-model:show="pageState.drawerVisible" :is-update="pageState.isUpdate" :data="pageState.editData"
+                   @success="onGetData"
+                   :form-items="formFiledList"></user-drawer>
+  </app-container>
 </template>
 <script setup lang="ts">
 
@@ -31,8 +31,8 @@ const genderOptions = [
 ]
 const roleListOptions = ref([])
 const formFiledList = computed(()=>[
-  {field: 'username', label: '用户名称', filedType: 'string', isSearch: false, required: true},
-  {field: 'phone', label: '手机号', filedType: 'string', isSearch: false, required: true},
+  {field: 'username', label: '用户名称', filedType: 'string', isSearch: true, required: true},
+  {field: 'phone', label: '手机号', filedType: 'string', isSearch: true, required: true},
   {field: 'password', label: '密码',labelMessage:`${pageState.isUpdate ? '密码不为空则自动更新密码':'' }`, filedType: 'string', isSearch: false, required: !pageState.isUpdate},
   // {field: 'avatar', label: '用户头像', filedType: 'string', isSearch: false, required: true},
   {field: 'sex', label: '用户性别', filedType: 'select', isSearch: false, required: true,filedOptions:{options:genderOptions}},

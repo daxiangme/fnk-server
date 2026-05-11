@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>fun.isite.service</groupId>
+        <groupId>com.fnk</groupId>
         <artifactId>fnk-service</artifactId>
         <version>1.0.0</version>
     </parent>
@@ -17,7 +17,4 @@
         <module>service-common-db</module>
         <module>service-common-tools</module>
     </modules>
-
-
-
 </project>

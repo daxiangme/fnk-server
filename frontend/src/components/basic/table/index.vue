@@ -1,12 +1,23 @@
 <template>
-  <!--  搜索  -->
-  <div>
-    <n-card :bordered="false" v-if="searchFormFields.length" :content-style="{margin:0,padding:0 }"
-            class="px-24px mt-6px pt-20px mb-12px">
-      <BaseForm :data="formData" :items="searchFormFields" inline ref="formDom"
-                @collapse="getTableHeight" is-search
-                submit-text="搜索"
-                :grid-props="{cols: props.searchCols}" @submit="onFormSubmit" @reset="onGetTableData"/>
+  <div class="flex-col h-full gap-12px">
+    <n-card size="small" v-if="searchFormFields.length" :bordered="false">
+      <n-collapse>
+        <n-collapse-item title="搜索条件">
+          <BaseForm
+              :data="formData"
+              :items="searchFormFields"
+              inline
+              ref="formDom"
+              :label-align="props.labelAlign"
+              :label-width="props.labelWidth"
+              is-search
+              submit-text="搜索"
+              :grid-props="{ cols: props.searchCols }"
+              @submit="onFormSubmit"
+              @reset="onGetTableData"
+          />
+        </n-collapse-item>
+      </n-collapse>
     </n-card>
     <n-card :bordered="false" :content-style="{margin:0,padding:'16px' }" class="mb-12px mt-10px">
       <div class="flex items-center justify-between w-full mb-12px" ref="headDom">
@@ -50,115 +61,137 @@
                     :max-height="tableHeight" :scroll-x="tableHeight">
         <template #empty>
           <div class="flex-col-center">
-            <icon-local-empty class="text-400px text-primary"></icon-local-empty>
-            <p class="text-20px text-primary" v-if="!props.emptyText">无{{ props.title }}数据~</p>
-            <p class="text-20px text-primary" v-else>{{ props.emptyText }}</p>
+            <icon-local-empty
+                class="text-300px text-primary"
+            ></icon-local-empty>
+            <p
+                class="text-20px text-primary"
+                v-if="!props.emptyText"
+            >
+              无{{ props.title }}数据~
+            </p>
+            <p class="text-20px text-primary" v-else>
+              {{ props.emptyText }}
+            </p>
           </div>
         </template>
       </n-data-table>
-      <div class="w-full flex-col items-end mt-12px">
-        <n-pagination
-            :page='parseInt(data?.current ?? 1)'
-            :page-size='parseInt(data?.size ?? 10)'
-            :page-count='parseInt(data?.pages ?? 0)'
-            :page-sizes='[10, 20, 30, 40, 50]'
-            show-size-picker
-            @update:page='onPageChange'
-            @update:pageSize='onPageSizeChange'/>
-      </div>
     </n-card>
   </div>
 </template>
 <script setup lang="tsx">
-
-import {computed, nextTick, onMounted, PropType, reactive, Ref, ref, unref, watch} from "vue";
+import {
+  computed,
+  nextTick,
+  onMounted,
+  PropType,
+  reactive,
+  Ref,
+  ref,
+  unref,
+  watch,
+} from "vue";
 import {ITableColumn} from "@/components/basic/table/index";
 import {BaseFormItemProps} from "@/components/basic/form/index";
 import {generateTableColumnRender} from "@/components/basic/table/render";
-import BaseForm from "@/components/basic/form/index.vue"
-import {DataTableColumn, NButton, NSpace, PaginationProps, NPopconfirm} from 'naive-ui';
+import BaseForm from "@/components/basic/form/index.vue";
+import {
+  DataTableColumn,
+  NButton,
+  NSpace,
+  PaginationProps,
+  NPopconfirm,
+} from "naive-ui";
 
-defineOptions({name: 'BaseTable'})
+defineOptions({name: "BaseTable"});
 
 const props = defineProps({
   title: {
     type: String,
-    default: null
+    default: null,
   },
   desc: {
     type: String,
-    default: null
+    default: null,
   },
   rowKey: {
     type: String,
-    default: 'id'
+    default: "id",
   },
   data: {
-    type: Object as PropType<any | any[]>
+    type: Object as PropType<any | any[]>,
   },
   loading: {
     type: Boolean,
-    default: false
+    default: false,
   },
   columns: {
     type: Array as PropType<Array<ITableColumn>>,
-    default: []
+    default: [],
   },
   searchFormItems: {
     type: Array as PropType<Array<BaseFormItemProps>>,
-    default: []
+    default: [],
   },
   rowAction: Function as PropType<(row: any, rowIndex: number) => any>,
   getData: Function as PropType<({}) => any>,
   // 添加按钮
   isAddAction: {
     type: Boolean,
-    default: false
+    default: false,
   },
   // 列表数据取值key
   dataKey: {
     type: String,
-    default: 'records'
+    default: "records",
   },
   // 默认操作按钮
   isAction: {
     type: Boolean,
-    default: true
+    default: true,
   },
   // 编辑按钮
   isEditAction: {
     type: Boolean,
-    default: true
+    default: true,
   },
   // 删除按钮
   isDeleteAction: {
     type: Boolean,
-    default: true
+    default: true,
   },
   // 类型 page：分页列表  list：列表
   type: {
-    type: String as PropType<'page' | 'list'>,
-    default: 'page'
+    type: String as PropType<"page" | "list">,
+    default: "page",
   },
   // 搜索个数
   searchCols: {
     type: Number,
-    default: 4
+    default: 4,
   },
   isSelect: {
     type: Boolean,
-    default: false
+    default: false,
   },
   emptyText: {
     type: String,
-    default: null
+    default: null,
   },
   // 未使用
   loadingText: {
     type: String,
-    default: null
-  }
-})
+    default: null,
+  },
+  labelAlign: {
+    type: String as PropType<"left" | "right">,
+    default: "right",
+  },
+  labelWidth: {
+    type: Number,
+    default: 120,
+  },
+});
 
 const emits = defineEmits<{
   /**
@@ -166,39 +199,38 @@ const emits = defineEmits<{
    * @param e 事件名
    * @param data 数据
    */
-  (e: 'getData', data: any): void;
+  (e: "getData", data: any): void;
   /**
    * 编辑
    * @param e 事件名
    * @param data 数据
    */
-  (e: 'edit', data: any): void;
+  (e: "edit", data: any): void;
   /**
    * 删除
    * @param e 事件名
    * @param data 数据
    */
-  (e: 'delete', data: any): void;
+  (e: "delete", data: any): void;
   /**
    * 新增
    * @param e 事件名
    */
-  (e: 'add'): void;
-}>()
+  (e: "add"): void;
+}>();
 
 const formData = reactive({});
 
-// 分页数据 空了处理
+// 分页数据
 const pagination = reactive({
   page: parseInt(props.data?.current ?? 1),
   pageSize: parseInt(props.data?.size ?? 10),
-  pageCount: parseInt(props.data?.pages ?? 0),
-  pageSizes: [5, 20, 30, 40, 50],
-  showSizePicker: true
+  pageCount: parseInt(props.data?.total ?? 1),
+  pageSizes: [10, 20, 30, 40, 50],
+  showSizePicker: true,
 });
 
 const tableColumns = computed(() => {
-
   const columns = props.columns.map((item: ITableColumn) => {
     return {
       key: item.field,
@@ -215,24 +247,27 @@ const tableColumns = computed(() => {
     columns.push({
       title: defaultAction.title,
       key: defaultAction.field,
-      align: 'center',
-      titleAlign: 'center',
+      align: "center",
+      titleAlign: "center",
       render: defaultAction.render,
       width: defaultAction.labelWidth ?? 100,
-      ...defaultAction
-    } as any)
+      ...defaultAction,
+    } as any);
   }
   if (props.isSelect) {
-    return [{
-      type: 'selection',
-    }, ...columns]
+    return [
+      {
+        type: "selection",
+      },
+      ...columns,
+    ];
   }
-  return columns
-})
+  return columns;
+});
 const defaultAction = reactive<ITableColumn>({
-  field: 'actions',
-  fixed: 'right',
-  title: '操作',
+  field: "actions",
+  fixed: "right",
+  title: "操作",
   labelWidth: 140,
   render: (row: any, rowIndex: number) => {
     return (
@@ -240,8 +275,7 @@ const defaultAction = reactive<ITableColumn>({
           {props.rowAction?.(row, rowIndex)}
           {props.isEditAction && (
               <NButton
-
-                  onClick={() => emits('edit', row)}
+                  onClick={() => emits("edit", row)}
                   secondary
                   type="info"
               >
@@ -250,7 +284,7 @@ const defaultAction = reactive<ITableColumn>({
           )}
           {props.isDeleteAction && (
               <NPopconfirm
-                  onPositiveClick={() => emits('delete', row)}
+                  onPositiveClick={() => emits("delete", row)}
                   v-slots={{
                     trigger: () => {
                       return (
@@ -266,41 +300,38 @@ const defaultAction = reactive<ITableColumn>({
           )}
         </NSpace>
     );
-  }
+  },
 });
 
 const tableData = computed(() => {
   if (!props.data) {
-    return []
+    return [];
   }
-  if (props.type === 'list') {
-    return props.data
+  if (props.type === "list") {
+    return props.data;
   } else {
-    return props.data[props.dataKey]
+    return props.data[props.dataKey];
   }
-})
+});
 
 const searchFormFields = computed(() => {
   if (!props.searchFormItems) {
-    return []
+    return [];
   }
-  const items = []
-  Object.assign(items, props.searchFormItems)
-  return items.filter(item => item?.isSearch).map(item => {
-    if (item?.filedOptions?.disabled) {
-      item.filedOptions.disabled = false
-    }
-    return item;
-  });
-})
+  const items = [];
+  Object.assign(items, props.searchFormItems);
+  return items
+      .filter((item) => item?.isSearch)
+      .map((item) => {
+        if (item?.filedOptions?.disabled) {
+          item.filedOptions.disabled = false;
+        }
+        return item;
+      });
+});
 
-const headDom = ref()
-const formDom = ref()
-// 获取dom的高度
-const getDomHeight = (dom: any) => {
-  return unref(dom)?.clientHeight ?? 0
-}
-const tableHeight = ref(910)
+const headDom = ref();
+const formDom = ref();
 
 function onPageChange(page: number) {
   pagination.page = page;
@@ -310,51 +341,36 @@ function onPageChange(page: number) {
 function onPageSizeChange(pageSize: number) {
   pagination.pageSize = pageSize;
   onGetTableData();
-
-}
-
-// 高度处理
-function getTableHeight(num?: number) {
-  if (num) {
-    tableHeight.value = window.innerHeight - 108 - num - 20 - getDomHeight(headDom) - 80 - 86 - 12
-  } else {
-    tableHeight.value = window.innerHeight - 108 - formDom.value?.height - getDomHeight(headDom) - 80 - 86 - 6
-  }
 }
 
 function onFormSubmit(state: boolean) {
   if (state) {
-    onGetTableData()
+    onGetTableData();
   }
 }
 
 function onGetTableData() {
-  if (props.type === 'page') {
-    emits('getData', {
+  if (props.type === "page") {
+    emits("getData", {
       page: pagination.page,
       pageSize: pagination.pageSize,
-      ...unref(formData)
-    })
+      ...unref(formData),
+    });
     props.getData?.({
       page: pagination.page,
       pageSize: pagination.pageSize,
-      ...unref(formData)
-    })
+      ...unref(formData),
+    });
   } else {
-    emits('getData', unref(formData))
-    props.getData?.(unref(formData))
+    emits("getData", unref(formData));
+    props.getData?.(unref(formData));
   }
 }
 
 onMounted(() => {
   // 获取当前屏幕高度
-  getTableHeight()
-  onGetTableData()
-})
-
-
+  onGetTableData();
+});
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -3,12 +3,12 @@
     <n-breadcrumb-item v-for="item in breadcrumbList" :key="item.name">
       <n-dropdown :options="item.children" v-if="item.children" @select="breadcrumbClick" key-field="name">
         <div class="flex-center">
-          <component :is="item.icon" v-if="item.icon" class="mr-6px"/>
+          <component :is="item.icon" v-if="item.icon&&props.showIcon" class="mr-6px"/>
           {{ item.label }}
         </div>
       </n-dropdown>
       <div class="flex-center" v-else>
-        <component :is="item.icon" v-if="item.icon" class="mr-6px"/>
+        <component :is="item.icon" v-if="item.icon&&props.showIcon" class="mr-6px"/>
         {{ item.label }}
       </div>
     </n-breadcrumb-item>
@@ -22,6 +22,13 @@ import {System} from "@/typings/system";
 import {renderIcon} from "@/utils";
 import {computed} from "vue";
 import {router} from "@/router";
+
+const props = defineProps({
+  showIcon: {
+    type: Boolean,
+    default: true
+  }
+})
 
 const route = useRoute()
 const generateBreadcrumbList = (matched: RouteLocationMatched[] | any) => {
@@ -45,7 +52,6 @@ const generateBreadcrumbList = (matched: RouteLocationMatched[] | any) => {
 const breadcrumbList = computed(() => generateBreadcrumbList(route.matched))
 
 const breadcrumbClick = (item:any) => {
-  console.log(item)
   if (item !== route.name) {
     router.push({name: item})
   }

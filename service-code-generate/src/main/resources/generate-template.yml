@@ -8,6 +8,6 @@ author: Enigma
 #输出路径
 output: /Users/Enigma/WorkSpace/IdeaProjects/eg-admin/eg-admin-code-generate
 pkg:
-  parent: fun.isite.admin.core
-  module: account
+  parent: com.fnk.app.demo.biz
+  module:
 swagger: true

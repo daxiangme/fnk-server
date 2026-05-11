@@ -1,15 +1,16 @@
 package ${package.Service};
 
 import ${package.Entity}.${entity};
-import ${superServiceClassPackage};
+import ${package.Mapper}.${table.mapperName};
+import com.fnk.common.db.impl.BaseService;
+import org.springframework.stereotype.Service;
 
 /**
-* ${table.comment!} 服务接口层
+* ${table.comment!} 服务层
 *
 * @author ${author}
 */
-public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
-
-
+@Service
+public class ${table.serviceName} extends BaseService<${table.mapperName}, ${entity}> {
 
 }

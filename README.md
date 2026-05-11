@@ -40,15 +40,14 @@
 
 ```bash
 ├── frontend # 前端项目
-├── service-api # 服务接口
+├── app-server # 应用启动模块
+├── app-system # 系统业务模块（api + biz）
+├── service-starter # 服务端基础 starter
 ├── service-common # 服务公共模块
 ├── service-common-db # 服务数据库模块
 ├── service-common-bean # 公共bean模块
 ├── service-common-tools # 公共工具模块
 ├── service-code-generator # 代码生成器
-├── service-core # 服务核心模块
-├── service-core-base # 核心基础模块
-├── service-core-system # 系统模块
 ├── pom.xml # 父pom
 ├── service.sql # 数据库脚本
 └── README.md # 项目说明
@@ -59,8 +58,8 @@
 ### 后端运行
 
 - 导入数据库脚本
-- 修改数据库配置-`service-core-base/src/main/resources/application.yml`
-- 运行`service-api->service-api-admin->AdminApiApplication`
+- 修改数据库配置-`app-server/app-server-admin/src/main/resources/application-dev.yml`
+- 运行`app-server->app-server-admin->com.fnk.app.admin.AdminApplication`
 
 ```
 注意 项目是聚合项目且实现了动态配置开发 请先查看pom.xml

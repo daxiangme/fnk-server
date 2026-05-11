@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>fun.isite.service</groupId>
+        <groupId>com.fnk</groupId>
         <artifactId>service-common</artifactId>
         <version>1.0.0</version>
     </parent>
@@ -28,16 +28,20 @@
           <version>3.0.3</version>
       </dependency>
       <dependency>
-          <groupId>mysql</groupId>
-          <artifactId>mysql-connector-java</artifactId>
+          <groupId>com.mysql</groupId>
+          <artifactId>mysql-connector-j</artifactId>
       </dependency>
       <dependency>
-          <groupId>fun.isite.service</groupId>
+          <groupId>com.fnk</groupId>
           <artifactId>service-common-bean</artifactId>
       </dependency>
       <dependency>
-          <groupId>fun.isite.service</groupId>
+          <groupId>com.fnk</groupId>
           <artifactId>service-common-tools</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>org.springdoc</groupId>
+          <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
       </dependency>
   </dependencies>
 

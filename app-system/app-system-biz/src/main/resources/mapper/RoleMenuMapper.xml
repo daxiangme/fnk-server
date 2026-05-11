@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fnk.app.system.biz.dal.mapper.RoleMenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fnk.app.system.biz.dal.entity.RoleMenuDO">
+        <result column="id" property="id" />
+        <result column="role_id" property="roleId" />
+        <result column="menu_id" property="menuId" />
+    </resultMap>
+    <select id="queryPermissionKeyByRoleId" resultType="java.lang.String">
+        select
+        sm.permission
+        from
+        system_menu sm
+        inner join role_menu srm on sm.id = srm.menu_id
+        where
+        srm.role_id = #{roleId}
+    </select>
+    <select id="queryPermissionKeyByRoleKey" resultType="java.lang.String">
+        select
+        sm.permission
+        from
+        system_menu sm
+        inner join role_menu srm on sm.id = srm.menu_id
+        inner join role_info sr on sr.id = srm.role_id
+        where
+        sr.role_key = #{roleKey}
+    </select>
+
+</mapper>

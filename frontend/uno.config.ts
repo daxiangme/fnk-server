@@ -1,4 +1,5 @@
 import {defineConfig, presetUno, presetAttributify} from 'unocss';
+
 export default defineConfig({
     content: {
         pipeline: {
@@ -40,7 +41,10 @@ export default defineConfig({
         'fixed-center': 'fixed-lt flex-center wh-full',
         'nowrap-hidden': 'whitespace-nowrap overflow-hidden',
         'ellipsis-text': 'nowrap-hidden text-ellipsis',
-        'transition-base': 'transition-all duration-300 ease-in-out'
+        'transition-base': 'transition-all duration-300 ease-in-out',
+        'bg-container': 'bg-white dark:bg-dark',
+        'bg-layout': 'bg-#f5f7f9 dark:bg-#101014 ',
+        'container': 'flex-col flex-1'
     },
     theme: {
         colors: {
@@ -48,15 +52,15 @@ export default defineConfig({
             primary_hover: 'rgba(var(--primary-color-hover))',
             primary_pressed: 'rgba(var(--primary-color-pressed))',
             primary_active: 'rgba(var(--primary-color-active),0.1)',
-            primary_1: 'rgba(var(--primary-color1))',
-            primary_2: 'rgba(var(--primary-color2))',
-            primary_3: 'rgba(var(--primary-color3))',
-            primary_4: 'rgba(var(--primary-color4))',
-            primary_5: 'rgba(var(--primary-color5))',
-            primary_6: 'rgba(var(--primary-color6))',
-            primary_7: 'rgba(var(--primary-color7))',
-            primary_8: 'rgba(var(--primary-color8))',
-            primary_9: 'rgba(var(--primary-color9))',
+            primary_1: 'rgba(var(--primary-color-1))',
+            primary_2: 'rgba(var(--primary-color-2))',
+            primary_3: 'rgba(var(--primary-color-3))',
+            primary_4: 'rgba(var(--primary-color-4))',
+            primary_5: 'rgba(var(--primary-color-5))',
+            primary_6: 'rgba(var(--primary-color-6))',
+            primary_7: 'rgba(var(--primary-color-7))',
+            primary_8: 'rgba(var(--primary-color-8))',
+            primary_9: 'rgba(var(--primary-color-9))',
             info: 'rgba(var(--info-color))',
             info_hover: 'rgba(var(--info-color-hover))',
             info_pressed: 'rgba(var(--info-color-pressed))',

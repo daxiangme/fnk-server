@@ -18,14 +18,13 @@ export function singlePageToRoute(page: PageRoute, authRouteKey: string[]): Rout
     // 判断是否有权限
     if (authRouteKey.length == 0 || authRouteKey.includes(page.name)) {
         const layout = page.type === "self" ? page.component : getLayoutComponent(page.type)
-        const isSingle = isSingleRoute(page)
         const itemRoute = {...page} as RouteRecordRaw
         itemRoute.component = layout
         if (hasChildren(page)) {
             itemRoute.children = page.children.map(child => singlePageToRoute(child, authRouteKey)).flat()
         }
         itemRoute.component = layout
-        if (isSingle) {
+        if (isSingleRoute(page)) {
             const parentPath = `${page.path}-parent`
             itemRoute.component = page.component
             return [{
@@ -99,8 +98,8 @@ function singleDynamicMenuToRoute(menu: IMenus): PageRoute[] {
 }
 
 function dynamicGetSelfComponent(path: string) {
-    let modules = import.meta.glob('@/views/**/*.vue')
-    return modules[`/src/views${path}/index.vue`]
+    let views = import.meta.glob('@/views/**/*.vue')
+    return views[`/src/views/${path}.vue`]
 }
 
 export function isSingleRoute(page: PageRoute) {

@@ -1,44 +1,56 @@
 <template>
-  <div class="tabs-view">
+  <div class="tabs-view flex w-full items-center  "  :class="[props.isCard?'':'px-12px bg-#fff dark:bg-dark']" :style="{height:`${props.height}px`,...getHeaderStyle}">
     <div class="tabs-view-main">
       <div ref="tabsWrap" class="tabs-line " :class="{'tabs-line-scroll--ed':state.scrollable}">
-        <div class="tabs-line-left bg-#f5f7f9  text-#666 dark:text-#999" @click="scrollLeft" v-if="state.scrollable">
+        <div class="tabs-line-left bg-#f8f8f8  text-#666 dark:text-#999" @click="scrollLeft" v-if="state.scrollable">
           <icon-line-md:chevron-left/>
         </div>
-        <div class="tabs-line-right bg-#f5f7f9 text-#666 dark:text-#999" @click="scrollRight" v-if="state.scrollable">
+        <div class="tabs-line-right bg-#f8f8f8 text-#666 dark:text-#999" @click="scrollRight" v-if="state.scrollable">
           <icon-line-md:chevron-right/>
         </div>
-        <div class="tabs-line-scroll " ref="tabsScroll">
+        <div class="tabs-line-scroll  " ref="tabsScroll">
           <!--     拖动     -->
-          <Draggable :list="tabsList" animation="300" item-key="fullPath" class="flex">
+          <Draggable :list="tabsList" animation="300" item-key="fullPath" class="flex "  >
             <template #item="{element}">
-              <div class="tabs-line-scroll-item bg-#fff dark:bg-#333 flex items-center"
+              <div class="tabs-line-scroll-item "
                    :id="`tab_item_${element.name}`" @click.stop="onTagClick(element)"
                    @contextmenu="onContextMenu($event, element)">
-                <div class="h-32px flex items-center justify-center">
-                  <span class="lh-14px text-14px "
-                        :class="{'text-primary':state.activeTag==element.name}">{{ element.meta.title }}</span>
-                  <icon-line-md:close class="text-14px ml-2px mr--6px  text-#999" v-if="isClose(element)"
-                                      @click.stop="onCloseTabs(element)"/>
+              
+                <div class=" flex-1 flex items-center justify-center "  >
+                  <n-button size="small" class="" :type="state.activeTag==element.name?'primary':''"  ghost :class="[props.isCard&&'bg-container']"  >
+                    <eg-icon :icon="element.meta.icon"  :class="{'text-primary':state.activeTag==element.name}" class="mr-6px "/>
+                    {{ element.meta.title }}
+                    <icon-line-md:close class="text-14px ml-6px mr--6px p-1px rounded-50 hover:bg-primary_3 hover:text-#fff  " v-if="isClose(element)"
+                                        @click.stop="onCloseTabs(element)"/>
+                  </n-button>
                 </div>
               </div>
             </template>
           </Draggable>
         </div>
       </div>
-      <div class="tabs-close bg-#fff dark:bg-#333 text-#666 dark:text-#999">
-        <n-dropdown trigger="hover" :options="tabsMenuOptions" placement="bottom-end" @select="onDropdownClick">
-          <icon-solar:alt-arrow-down-linear/>
-        </n-dropdown>
-      </div>
+      <!--      <div class="tabs-close bg-#fff dark:bg-#333 text-#666 dark:text-#999">-->
+      <!--        <n-dropdown trigger="hover" :options="tabsMenuOptions" placement="bottom-end"  @select="onDropdownClick">-->
+      <!--          <icon-solar:alt-arrow-down-linear/>-->
+      <!--        </n-dropdown>-->
+      <!--      </div>-->
+      <n-dropdown trigger="hover" :options="tabsMenuOptions" placement="bottom-end" @select="onDropdownClick">
+        <div class="bg-#f8f8f8 dark:bg-#333 text-#666 dark:text-#999 rounded-4px ml-12px">
+          <n-button  class="w-32px h-32px "  size="small" :bordered="false">
+            <template #icon>
+              <icon-solar:alt-arrow-down-linear  />
+            </template>
+          </n-button>
+        </div>
+      </n-dropdown>
       <n-dropdown
-          :show="state.showDropdown"
-          :x="state.dropdownX"
-          :y="state.dropdownY"
-          :options="tabsMenuOptions"
-          @select="onDropdownClick"
-          placement="bottom-start"
-          @clickoutside="state.showDropdown=false"
+        :show="state.showDropdown"
+        :x="state.dropdownX"
+        :y="state.dropdownY"
+        :options="tabsMenuOptions"
+        @select="onDropdownClick"
+        placement="bottom-start"
+        @clickoutside="state.showDropdown=false"
       />
     </div>
   </div>
@@ -50,11 +62,20 @@ import {PageRoute} from "@/typings/route";
 import {useRoute, useRouter} from "vue-router";
 import elementResizeDetectorMaker from "element-resize-detector";
 import {renderIcon} from "@/utils";
-import {useRouteStore, useTabsStore} from "@/store";
+import {useRouteStore, useTabsStore, useThemeStore} from "@/store";
 
+const props = defineProps({
+  isCard: {
+    type: Boolean,
+    default: false
+  },
+  height:{
+    type: Number,
+    default: 44
+  }
+})
 const ut = useTabsStore()
 const tabsList = computed(() => ut.tabList);
-
 const router = useRouter();
 const route = useRoute()
 const tabsScroll = ref(null)
@@ -77,7 +98,7 @@ const route2PageRoute = (route: any): PageRoute => {
     name: route.name,
     path: route.path,
     meta: route.meta,
-    type:"self"
+    type: "self"
   }
 }
 const onDropdownClick = (key: ExpandKey) => {
@@ -109,7 +130,7 @@ const isClose = (item: PageRoute) => {
 const tabsMenuOptions = computed(() => {
   const isDisabled = tabsList.value.length == 1
   let isRefresh = false
-  if (activePage.value){
+  if (activePage.value) {
     isRefresh = activePage.value?.name != route.name
   }
   return [
@@ -142,6 +163,15 @@ const tabsMenuOptions = computed(() => {
 const onTagClick = (tag: PageRoute) => {
   router.push({name: tag.name})
 }
+const theme = useThemeStore()
+const getHeaderStyle = computed(() => {
+  if (theme.layout.mode === 'card') {
+    return {
+      borderBottomLeftRadius: theme.layout.round + 'px',
+      borderBottomRightRadius: theme.layout.round + 'px',
+    }
+  }
+})
 
 // 右键菜单
 const onContextMenu = (e: MouseEvent, tab: PageRoute) => {
@@ -216,10 +246,10 @@ async function updateTabsScroll(autoScroll = false) {
 function scrollTo(value: number, amplitude: number) {
   const currentScroll = tabsScroll.value.scrollLeft
   const scrollWidth =
-      (amplitude > 0 && currentScroll + amplitude >= value) ||
-      (amplitude < 0 && currentScroll + amplitude <= value)
-          ? value
-          : currentScroll + amplitude;
+    (amplitude > 0 && currentScroll + amplitude >= value) ||
+    (amplitude < 0 && currentScroll + amplitude <= value)
+      ? value
+      : currentScroll + amplitude;
   tabsScroll.value && tabsScroll.value.scrollTo(scrollWidth, 0);
   if (scrollWidth === value) return;
   return window.requestAnimationFrame(() => scrollTo(value, amplitude));
@@ -246,9 +276,9 @@ function scrollRight() {
   const currentScroll = tabsScroll.value.scrollLeft;
   if (navWidth - currentScroll <= containerWidth) return;
   const scrollLeft =
-      navWidth - currentScroll > containerWidth * 2
-          ? currentScroll + containerWidth
-          : navWidth - containerWidth;
+    navWidth - currentScroll > containerWidth * 2
+      ? currentScroll + containerWidth
+      : navWidth - containerWidth;
   scrollTo(scrollLeft, (scrollLeft - currentScroll) / 20);
 }
 
@@ -279,13 +309,9 @@ window.addEventListener('scroll', onScroll, true)
 
 <style scoped lang="scss">
 .tabs-view {
-  width: 100%;
-  padding: 6px 0;
-  display: flex;
-
   &-main {
-    height: 32px;
     display: flex;
+    align-items: center;
     max-width: 100%;
     min-width: 100%;
   }
@@ -308,14 +334,14 @@ window.addEventListener('scroll', onScroll, true)
     }
 
     &-item {
-      height: 32px;
-      padding: 0 12px;
-      border-radius: 3px;
-      margin-right: 6px;
+      //padding: 0 12px;
+      //border-radius: 3px;
+      margin-right: 12px;
       cursor: pointer;
       display: inline-block;
       position: relative;
       flex: 0 0 auto;
+      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     }
   }
 
@@ -325,7 +351,7 @@ window.addEventListener('scroll', onScroll, true)
     position: absolute;
     height: 32px;
     cursor: pointer;
-    font-size: 24px;
+    font-size: 20px;
     display: flex;
     align-items: center;
     justify-content: center;

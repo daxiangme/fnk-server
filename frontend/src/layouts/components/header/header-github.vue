@@ -1,7 +1,7 @@
 <template>
 <base-hover-tip text="github地址">
   <div class="flex-center w-48px text-24px" @click="openGithub">
-    <eg-icon icon="logos:github-icon" />
+    <eg-icon icon="mdi:github" />
   </div>
 </base-hover-tip>
 </template>

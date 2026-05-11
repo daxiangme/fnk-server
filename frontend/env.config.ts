@@ -4,7 +4,7 @@ type ServiceEnvConfig = Record<ServiceEnvType, ServiceUrlConfig>;
 /** 请求服务的环境配置 */
 const serviceEnv: ServiceEnvConfig = {
     dev: {
-        url: "http://localhost:12345"
+        url: "http://localhost:8080"
     },
     test: {
         url: "http://localhost:12200"

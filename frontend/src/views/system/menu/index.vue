@@ -1,5 +1,5 @@
 <template>
-  <div>
+<app-container>
     <eg-tree-table :loading="pageState.loading" :get-data="onGetData" :search-form-items="formFiledList"
                    :data="tableData" :columns="columns"
                    @edit="onEdit" :row-action="rowAction" @delete="onDelete"
@@ -8,7 +8,7 @@
     <MenuDrawer v-model:show="pageState.drawerVisible" :is-update="pageState.isUpdate" :data="pageState.editData"
                 @success="onGetData"
                 :form-items="formFiledList"></MenuDrawer>
-  </div>
+</app-container>
 </template>
 <script setup lang="tsx">
 import {computed, reactive, Ref, ref} from "vue";

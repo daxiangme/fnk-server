@@ -2,38 +2,59 @@ import {System} from "@/typings/system";
 
 export const themeSetting: System.GlobalTheme = {
     mode: "light",
-    auto: true,
-    color: "#1890ff",
-    round: 4,
-    isAnimate: true,
-    animation: "zoom-fade",
-    collapsed: false,
-    layout: "vertical",
-    headerRound: 4,
-    colorList: [
-        "#1890ff",
-        "#409EFF",
-        "#2d8cf0",
-        "#007AFF",
-        "#5ac8fa",
-        "#5856D6",
-        "#536dfe",
-        "#9c27b0",
-        "#AF52DE",
-        "#0096c7",
-        "#00C1D4",
-        "#34C759",
-        "#43a047",
-        "#7cb342",
-        "#c0ca33",
-        "#78DEC7",
-        "#e53935",
-        "#d81b60",
-        "#f4511e",
-        "#fb8c00",
-        "#ffb300",
-        "#fdd835",
-        "#6d4c41",
-        "#546e7a"
-    ]
+    layout: {
+        mode: "base",
+        round: 4
+    },
+    color: {
+        primary: "#6366F1",
+        info: "#6366F1",
+        success: "#5cb85c",
+        warning: "#f0ad4e",
+        error: "#d9534f",
+        swatches: ['#3b82f6',
+            '#6366f1',
+            '#8b5cf6',
+            '#a855f7',
+            '#0ea5e9',
+            '#06b6d4',
+            '#f43f5e',
+            '#ef4444',
+            '#ec4899',
+            '#d946ef',
+            '#f97316',
+            '#f59e0b',
+            '#eab308',
+            '#84cc16',
+            '#22c55e',
+            '#10b981']
+    },
+    menu: {
+        layout: "base",
+        showBreadcrumb: true,
+        showBreadcrumbIcon: true,
+        headerHeight: 56,
+        showTabs: true,
+        tabsHeight: 44,
+        showCollapse: true
+    },
+    sider: {
+        collapsed: false,
+        width: 220,
+        collapsedWidth: 64,
+        inverted: false,
+        showCollapse: true
+    },
+    animate: {
+        enable: true,
+        type: "fade-slide"
+    },
+    footer: {
+        show: true,
+        height: 44
+    },
+    naive: {
+        borderRadius: 4
+    }
+
 };

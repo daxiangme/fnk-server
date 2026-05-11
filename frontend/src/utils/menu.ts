@@ -1,6 +1,7 @@
 import {PageRoute} from "@/typings/route";
 import {System} from "@/typings/system";
-import {isSingleRoute, renderIcon} from "@/utils/index";
+import {hasChildren, isSingleRoute, renderIcon} from "@/utils/index";
+import { log } from "console";
 
 /**
  * 将动态菜单项进行分组
@@ -34,11 +35,11 @@ export function groupDynamicMenu(menuItems: any[], parentId: number | string = '
 export const dynamicGenerateMenus = (pages: PageRoute[]) => {
     const menuOptions: System.GlobalMenu[] = []
     pages.forEach((page: PageRoute) => {
-        if (!page.meta?.hide){
+        if (!page.meta?.hide) {
             if (isSingleRoute(page)) {
                 // 添加原本的路由-因为原本的被处理了
                 menuOptions.push(singlePageToMenu(page.children[0]))
-            }else {
+            } else {
                 const menu = {
                     label: page.meta?.title,
                     key: page.name,
@@ -47,8 +48,8 @@ export const dynamicGenerateMenus = (pages: PageRoute[]) => {
                     routePath: page.path,
                     meta: page.meta
                 } as System.GlobalMenu
-                const children = page.children?.map(child => singlePageToMenu(child))
-                if (children.length) {
+                const children = page?.children?.map(child => singlePageToMenus(child)).flat()
+                if (children?.length) {
                     menu.children = children
                 }
                 menuOptions.push(menu)
@@ -62,8 +63,18 @@ export const dynamicGenerateMenus = (pages: PageRoute[]) => {
  * 单个
  * @param page
  */
-function singlePageToMenu(page: PageRoute): System.GlobalMenu {
+function singlePageToMenus(page: PageRoute): System.GlobalMenu[] {
+    const menus: System.GlobalMenu[] = []
+    const menu: System.GlobalMenu = singlePageToMenu(page)
+    if (!isSingleRoute(page)){
+        menu.children = page.children?.map(child => singlePageToMenus(child)).flat()
+    }
+    menus.push(menu)
+    return menus
+}
 
+
+function singlePageToMenu(page: PageRoute): System.GlobalMenu {
     return {
         label: page.meta?.title,
         key: page.name,

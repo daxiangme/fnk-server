@@ -6,7 +6,7 @@
           <n-form-item :path="item.field" :label="props.showLabel?item.label:''">
             <!--标签名右侧温馨提示-->
             <template v-if="item.labelMessage" #label>
-              <n-space align="center" :justify="props.labelAlign as any" size="small">
+              <n-space align="center" :justify="props.labelAlign" size="small">
                 {{ item.label }}
                 <n-tooltip trigger="hover">
                   <template #trigger>
@@ -53,7 +53,7 @@
               <n-date-picker
                   class="w-full"
                   v-model:formatted-value="props.data[item.field]"
-                  :type="item.filedType as any"
+                  :type="item.filedType"
                   :value-format="item?.filedType==='date' ? 'yyyy-MM-dd':'yyyy-MM-dd HH:mm:ss'"
                   :placeholder="item.filedOptions?.placeholder??`请选择${item.label}`"
                   v-bind="item.filedOptions"
@@ -69,13 +69,6 @@
             <slot name="actionGroup">
               <n-button v-bind="submitBtnOptions" @click="submit">{{ props.submitText }}</n-button>
               <n-button v-bind="resetBtnOptions" @click="reset">{{ props.resetText }}</n-button>
-              <n-button @click="unfoldToggle" type="primary" text icon-placement="right" v-if="isShowCollapse">
-                <template #icon>
-                  <icon-line-md:chevron-left class="rotate-270" v-if="overflow"/>
-                  <icon-line-md:chevron-left class="rotate-90" v-else/>
-                </template>
-                {{ overflow ? '展开' : '收起' }}
-              </n-button>
             </slot>
           </n-space>
         </n-gi>
@@ -122,8 +115,8 @@ const getGridProps = computed((): GridProps => {
   return {
     responsive: 'screen',
     xGap: 12,
-    collapsedRows: props.collapsedRows,
-    collapsed: props.inline ? gridCollapsed.value : false,
+    // collapsedRows: props.collapsedRows,
+    // collapsed: props.inline ? gridCollapsed.value : false,
     cols: props.gridProps && 1,
     ...props.gridProps,
   }

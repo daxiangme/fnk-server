@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fnk.app.system.biz.dal.mapper.RoleInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fnk.app.system.biz.dal.entity.RoleInfoDO">
+        <result column="id" property="id" />
+        <result column="role_name" property="roleName" />
+        <result column="role_key" property="roleKey" />
+        <result column="order_sort" property="orderSort"/>
+        <result column="role_scope" property="roleScope"  typeHandler="com.fnk.common.db.handler.StringListTypeHandler" />
+        <result column="status" property="status" />
+    </resultMap>
+
+</mapper>

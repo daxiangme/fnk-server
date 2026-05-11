@@ -1,0 +1,81 @@
+logging:
+  file:
+    path: /tmp/backend/server/logs
+  config: classpath:logback-spring.xml
+  level: {
+    "com.fnk": off
+  }
+spring:
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      database: 0
+      password: 123456
+      timeout: 10s
+      lettuce:
+        cluster:
+          refresh:
+            adaptive: true
+            period: 60
+        pool:
+          max-active: 50
+          min-idle: 5
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/fnk-service?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: fnk-service
+    password: TjzHD56pdnPyMnYN
+  cache:
+    type: redis
+  aop:
+    auto: true
+    proxy-target-class: true
+#  rabbitmq:
+#    host: 192.168.31.13
+#    port: 5672
+#    username: robot-client
+#    password: 5r8nwsT2UD8F66Hj3F
+#    listener:
+#      simple:
+#        acknowledge-mode: auto
+sa-token:
+  token-name: Authorization
+  timeout: 2592000
+  is-read-cookie: false
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: true
+  # token风格
+  token-style: random-64
+  # 是否输出操作日志
+  is-log: false
+  jwt-secret-key: SDJJLEKWxjsuODSKNDXWXSKSUDADX
+  activity-timeout: -1
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
+  global-config:
+    db-config:
+      id-type: assign_id
+service:
+  port:
+    admin: 12345
+  api-version: 1
+  version: @fnk-service.version@
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    doc-expansion: none
+  api-docs:
+    enabled: true
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
