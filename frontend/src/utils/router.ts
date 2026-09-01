@@ -1,138 +1,61 @@
-import {LayoutComponentType, PageRoute} from "@/typings/route";
-import {RouteRecordRaw} from "vue-router";
-
-
 /**
- * 静态pageRoute转换为路由
- * @param pages 配置的路由
- * @param authRouteKey 权限key 由后端返回 如果不传入则全部返回
+ * 路由工具函数
+ *
+ * 提供路由相关的工具函数
+ *
+ * @module utils/router
  */
-export function staticPageRouteGenerateRoutes(pages: PageRoute[], authRouteKey: string[] = []) {
-    // 排序处理
-    pages.sort((a, b) => a.meta?.order - b.meta?.order)
-    return pages.map(page => singlePageToRoute(page, authRouteKey)).flat()
+import { RouteLocationNormalized, RouteRecordRaw } from 'vue-router'
+import AppConfig from '@/config'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+import i18n, { $t } from '@/locales'
+
+/** 扩展的路由配置类型 */
+export type AppRouteRecordRaw = RouteRecordRaw & {
+  hidden?: boolean
 }
 
-export function singlePageToRoute(page: PageRoute, authRouteKey: string[]): RouteRecordRaw[] {
-    const resultRoute: RouteRecordRaw[] = [];
-    // 判断是否有权限
-    if (authRouteKey.length == 0 || authRouteKey.includes(page.name)) {
-        const layout = page.type === "self" ? page.component : getLayoutComponent(page.type)
-        const itemRoute = {...page} as RouteRecordRaw
-        itemRoute.component = layout
-        if (hasChildren(page)) {
-            itemRoute.children = page.children.map(child => singlePageToRoute(child, authRouteKey)).flat()
-        }
-        itemRoute.component = layout
-        if (isSingleRoute(page)) {
-            const parentPath = `${page.path}-parent`
-            itemRoute.component = page.component
-            return [{
-                path: parentPath,
-                component: layout,
-                isSingle: true,
-                redirect: page.path,
-                meta: page.meta,
-                children: [itemRoute]
-            } as RouteRecordRaw]
-        }
-        resultRoute.push(itemRoute)
-    }
-    return resultRoute
+/** 顶部进度条配置 */
+export const configureNProgress = () => {
+  NProgress.configure({
+    easing: 'ease',
+    speed: 600,
+    showSpinner: false,
+    parent: 'body'
+  })
 }
 
 /**
- * 根据后端返回的动态菜单生成路由
- * @param menuList 后端返回的动态菜单并且处理过分组的
+ * 设置页面标题，根据路由元信息和系统信息拼接标题
+ * @param to 当前路由对象
  */
-export function dynamicGenerateRoutes(menuList: IMenus[]): PageRoute[] {
-    return menuList.map(menu => singleDynamicMenuToRoute(menu)).flat()
+export const setPageTitle = (to: RouteLocationNormalized): void => {
+  const { title } = to.meta
+  if (title) {
+    setTimeout(() => {
+      document.title = `${formatMenuTitle(String(title))} - ${AppConfig.systemInfo.name}`
+    }, 150)
+  }
 }
 
-function singleDynamicMenuToRoute(menu: IMenus): PageRoute[] {
-    const routes: PageRoute[] = []
-    // 判断是否为rootId = 0
-    const routeItem = {
-        name: menu.routeKey,
-        path: menu.isIframe ? '/' + menu.routeKey : menu.path,
-        meta: {
-            title: menu.name,
-            icon: menu.icon,
-            localIcon: menu.localIcon,
-            permission: menu.permission,
-            hide: !menu.visible,
-            href: menu.isIframe ? menu.path : undefined,
-        },
-        type: "self",
-        component: menu.isIframe ? getLayoutComponent("iframe") : dynamicGetSelfComponent(menu.path),
-    } as PageRoute
-    if (menu.rootId === "0") {
-        if (!menu.children?.length) {
-            const item = {
-                name: `${menu.routeKey}-parent`,
-                path: `${menu.isIframe ? '/' + menu.routeKey : menu.path}-parent`,
-                isSingle: true,
-                redirect: menu.isIframe ? '/' + menu.routeKey : menu.path,
-                type: menu.isIframe ? "iframe" : "basic",
-                meta: {
-                    title: menu.name,
-                    icon: menu.icon,
-                    permission: menu.permission,
-                    hide: !menu.visible
-                },
-                component: getLayoutComponent("basic"),
-                children: [routeItem]
-            } as PageRoute
-            return [item]
-        } else {
-            const children = menu?.children.map(child => singleDynamicMenuToRoute(child)).flat()
-            routeItem.component = getLayoutComponent(menu.isIframe ? "iframe" : "basic")
-            if (children.length) {
-                routeItem.children = children
-                routeItem.redirect = children[0].path
-            }
-        }
+/**
+ * 格式化菜单标题
+ * @param title 菜单标题，可以是 i18n 的 key，也可以是字符串
+ * @returns 格式化后的菜单标题
+ */
+export const formatMenuTitle = (title: string): string => {
+  if (title) {
+    if (title.startsWith('menus.')) {
+      // 使用 te() 方法检查翻译键值是否存在，避免控制台警告
+      if (i18n.global.te(title)) {
+        return $t(title)
+      } else {
+        // 如果翻译不存在，返回键值的最后部分作为fallback
+        return title.split('.').pop() || title
+      }
     }
-    routes.push(routeItem)
-    return routes
+    return title
+  }
+  return ''
 }
-
-function dynamicGetSelfComponent(path: string) {
-    let views = import.meta.glob('@/views/**/*.vue')
-    return views[`/src/views/${path}.vue`]
-}
-
-export function isSingleRoute(page: PageRoute) {
-    return page?.isSingle ?? false
-}
-
-export function hasChildren(page: PageRoute) {
-    return page?.children && page?.children.length > 0
-}
-
-function getLayoutComponent(component: LayoutComponentType) {
-    switch (component) {
-        case "iframe":
-            return () => import('@/layouts/iframe.vue')
-        case "basic":
-            return () => import('@/layouts/index.vue')
-        case "blank":
-            return () => import('@/layouts/blank.vue')
-
-    }
-}
-
-// 获取缓存的路由
-export const getCacheRoutes = (pages: PageRoute[]) => {
-    const cacheRoutes: string[] = []
-    pages.forEach((page: PageRoute) => {
-        if (page.meta?.keepAlive) {
-            cacheRoutes.push(page.name)
-        }
-        if (page?.children?.length) {
-            cacheRoutes.push(...getCacheRoutes(page.children))
-        }
-    })
-    return cacheRoutes
-}
-

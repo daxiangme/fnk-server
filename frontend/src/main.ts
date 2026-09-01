@@ -1,23 +1,25 @@
-import {createApp} from 'vue'
 import App from './App.vue'
-import {router, setupRouter} from "@/router";
-import {setupAssets} from "@/init";
-import {setupStore} from "@/store";
+import { createApp } from 'vue'
+import { initStore } from './store'                 // Store
+import { initRouter } from './router'               // Router
+import language from './locales'                    // 国际化
+import '@styles/core/tailwind.css'                  // tailwind
+import '@styles/index.scss'                         // 样式
+import '@utils/sys/console.ts'                      // 控制台输出内容
+import { setupGlobDirectives } from './directives'
+import { setupErrorHandle } from './utils/sys/error-handle'
 
+document.addEventListener(
+  'touchstart',
+  function () {},
+  { passive: false }
+)
 
-async function initApp() {
+const app = createApp(App)
+initStore(app)
+initRouter(app)
+setupGlobDirectives(app)
+setupErrorHandle(app)
 
-    const app = createApp(App);
-    // 引入unocss css
-    setupAssets();
-
-    setupStore(app);
-
-    await setupRouter(app);
-
-
-    app.mount('#app')
-}
-
-void initApp()
-
+app.use(language)
+app.mount('#app')

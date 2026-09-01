@@ -1,28 +1,23 @@
-import {createRouter,  createWebHistory} from "vue-router";
-import {App} from "vue";
-import {constantRoutes} from "@/router/common";
-import {PageRoute} from "@/typings/route";
-import {createRouterGuard} from "@/router/guard";
+import type { App } from 'vue'
+import { createRouter, createWebHashHistory } from 'vue-router'
+import { staticRoutes } from './routes/staticRoutes'
+import { configureNProgress } from '@/utils/router'
+import { setupBeforeEachGuard } from './guards/beforeEach'
+import { setupAfterEachGuard } from './guards/afterEach'
 
-const {VITE_BASE_URL} = import.meta.env;
-
+// 创建路由实例
 export const router = createRouter({
-    history: createWebHistory(VITE_BASE_URL),
-    routes: constantRoutes as any,
-    strict: true,
-    scrollBehavior: () => ({left: 0, top: 0}),
+  history: createWebHashHistory(),
+  routes: staticRoutes // 静态路由
 })
 
-export async function setupRouter(app: App) {
-    app.use(router);
-    await createRouterGuard(router);
-    await router.isReady();
+// 初始化路由
+export function initRouter(app: App<Element>): void {
+  configureNProgress() // 顶部进度条
+  setupBeforeEachGuard(router) // 路由前置守卫
+  setupAfterEachGuard(router) // 路由后置守卫
+  app.use(router)
 }
 
-// 加载需要验证的路由
-const modules = import.meta.glob<any>('./modules/**/*.ts', {eager: true});
-export const routeModuleList: any = Object.keys(modules).reduce((list: any, key) => {
-    const mod: PageRoute | PageRoute[] = modules[key].default ?? {};
-    const modList = Array.isArray(mod) ? [...mod] : [mod];
-    return [...list, ...modList];
-}, [])
+// 主页路径，默认使用菜单第一个有效路径，配置后使用此路径
+export const HOME_PAGE_PATH = ''
