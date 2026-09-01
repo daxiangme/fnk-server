@@ -1,8 +1,8 @@
-
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+**/.DS_Store
 
 ### STS ###
 .apt_generated
@@ -32,19 +32,33 @@ target/
 ### VS Code ###
 .vscode/iconify
 
-### 打包 ###
-.dev
-.prod
+### 本地文档与实施记录 ###
+/docs/private/
+
+### 本地配置（仓库仅提交 *.example 文件） ###
+/app-server/app-server-admin/src/main/resources/application-dev.yml
+/app-server/app-server-admin/src/main/resources/application-prod.yml
+/service-code-generate/src/main/resources/generate-template*.yml
+!/service-code-generate/src/main/resources/generate-template.example.yml
+/frontend/.env
+/frontend/.env.*
+!/frontend/.env.example
+!/frontend/.env.development.example
+!/frontend/.env.production.example
+/deploy/.env
+
+### 打包、运行与上传产物 ###
+*.log
+/app-server/app-server-admin/dev/
+/app-server/app-server-admin/prod/
+/app-server/app-server-admin/logging.file.path_IS_UNDEFINED/
+/app-server/app-server-admin/uploads/
+/frontend/dist/
+/frontend/dist.zip
+/prod/
+/dev/
 
 ### code-generate ###
 /code-generate
 ### logging ###
 /logging.*
-
-
-### 排除上线打包相关
-/service-code-generate/src/main/resources/generate-template-dev.yml
-/service-core/service-core-basic/src/main/resources/application-core-basic-prod.yml
-/prod/
-/dev/
-/frontend/dist.zip

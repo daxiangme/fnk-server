@@ -6,12 +6,12 @@
 
 - 当前项目是前后端一体的后台管理系统脚手架。
 - 后端：Java 17、Spring Boot 3.2.0、Maven 多模块、MyBatis-Plus、Sa-Token、Hutool、Knife4j / springdoc。
-- 前端：Vue 3、TypeScript、Vite、Naive UI、UnoCSS、Pinia、Vue Router、Axios，依赖管理使用 pnpm。
+- 前端：基于 Art Design Pro 二次开发，使用 Vue 3、TypeScript、Vite、Element Plus、Tailwind CSS、Pinia、Vue Router、Axios，依赖管理使用 pnpm。
 - 服务端根包名以 `com.fnk` 为准，不要继续新增 `fun.isite.service` 旧包名代码。
 
 ## 目录地图
 
-- `pom.xml`：后端聚合父工程，包含 `app-server`、`service-starter`、`service-common`、`app-system`、`service-code-generate`。
+- `pom.xml`：后端聚合父工程，包含 `app-server`、`service-starter`、`service-common`、`app-system`、`app-infra`、`service-code-generate`。
 - `app-server/app-server-admin`：后台管理应用启动入口，启动类为 `com.fnk.app.admin.AdminApplication`，不放 Controller / Service / Mapper。
 - `service-starter`：服务端基础设施 starter，包含 web、security、data、doc、core。
 - `app-system/app-system-api`：系统模块契约层，包含 facade、AO、Query、VO、错误码、异常、常量。
@@ -50,10 +50,10 @@
 
 - 前端代码位于 `frontend`，依赖安装和脚本执行都在该目录下进行。
 - 使用 pnpm，不要混用 npm/yarn 生成新的锁文件。
-- 页面优先沿用现有结构：`app-container`、`BaseTable`、`BaseForm`、抽屉/弹窗组件、`src/service` API 封装、`src/router/modules` 路由模块、Pinia store。
+- 页面优先沿用 Art Design Pro 现有结构：`ArtSearchBar`、`ArtTableHeader`、`ArtTable`、抽屉/弹窗组件、`src/api` API 封装、`src/router` 动态路由和 Pinia store。
 - Vue 单文件组件优先使用 `<script setup lang="ts">`，保持类型声明和接口字段与后端一致。
-- API 调用统一通过 `frontend/src/service` 及其子模块封装，不要在页面里散写 axios 请求。
-- 样式优先使用 UnoCSS 工具类、现有主题变量和 Naive UI 能力；不要引入新的 UI 组件库或不必要的全局样式体系。
+- API 调用统一通过 `frontend/src/api` 及 `frontend/src/utils/http` 封装，不要在页面里散写 axios 请求。
+- 样式优先使用 Tailwind CSS 工具类、现有主题变量和 Element Plus 能力；不要引入新的 UI 组件库或不必要的全局样式体系。
 - 图标沿用 Iconify / 本地 SVG 机制。需要动态换色的 SVG 使用 `currentColor`。
 - 新增页面时同步检查路由、菜单权限、按钮权限、接口路径和空/加载/错误状态。
 - 页面交互应给出明确反馈，例如成功消息、加载态、空态或错误态，不要让操作静默失败。

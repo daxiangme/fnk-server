@@ -1,0 +1,28 @@
+FROM maven:3.9.9-eclipse-temurin-17 AS builder
+
+WORKDIR /workspace
+COPY . .
+RUN mvn -pl app-server/app-server-admin -am package -DskipTests -Pprod
+
+FROM eclipse-temurin:17-jre-jammy
+
+WORKDIR /app
+RUN groupadd --system --gid 10001 egservice \
+    && useradd --system --uid 10001 --gid egservice --home-dir /app --shell /usr/sbin/nologin egservice \
+    && mkdir -p /app/config /app/logs /app/dev/uploads \
+    && chown -R egservice:egservice /app
+
+COPY --from=builder --chown=egservice:egservice \
+    /workspace/app-server/app-server-admin/target/app-server-admin-*.jar \
+    /app/app.jar
+COPY --chown=egservice:egservice \
+    app-server/app-server-admin/src/main/resources/application-prod.example.yml \
+    /app/config/application-prod.yml
+
+ENV SPRING_PROFILES_ACTIVE=prod \
+    JAVA_OPTS="-XX:MaxRAMPercentage=75.0 -Dfile.encoding=UTF-8"
+
+EXPOSE 12345
+USER egservice
+
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar /app/app.jar"]

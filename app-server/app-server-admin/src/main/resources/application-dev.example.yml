@@ -1,0 +1,80 @@
+# 本地开发示例配置。
+# 复制为 application-dev.yml 后按本机环境修改；application-dev.yml 已被 Git 忽略。
+# 禁止在本 Example 文件中填写真实密码、Token、内网地址或其他敏感信息。
+
+logging:
+  file:
+    # 本地日志目录，可通过环境变量覆盖。
+    path: ${LOG_PATH:/tmp/eg-service/logs}
+  config: classpath:logback-spring.xml
+  level:
+    com.fnk: debug
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: ${MAX_FILE_SIZE:200MB}
+      max-request-size: ${MAX_REQUEST_SIZE:200MB}
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      database: ${REDIS_DATABASE:0}
+      password: ${REDIS_PASSWORD:}
+      timeout: 10s
+      lettuce:
+        cluster:
+          refresh:
+            adaptive: true
+            period: 60
+        pool:
+          max-active: 50
+          min-idle: 5
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:fnk-service}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:}
+  cache:
+    type: redis
+  aop:
+    auto: true
+    proxy-target-class: true
+
+sa-token:
+  token-name: Authorization
+  timeout: 2592000
+  is-read-cookie: false
+  is-concurrent: true
+  is-share: true
+  token-style: random-64
+  is-log: false
+  # 必须在本地 application-dev.yml 或环境变量中设置独立密钥。
+  jwt-secret-key: ${SA_TOKEN_JWT_SECRET:change-me-for-local-development}
+  activity-timeout: -1
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
+  global-config:
+    db-config:
+      id-type: assign_id
+
+service:
+  port:
+    admin: ${ADMIN_SERVER_PORT:12345}
+  api-version: 1
+  version: "@fnk-service.version@"
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    doc-expansion: none
+  api-docs:
+    enabled: true
+
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn

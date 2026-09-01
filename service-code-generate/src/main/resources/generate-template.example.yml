@@ -1,0 +1,17 @@
+# 独立代码生成器示例配置。
+# 复制为 generate-template-dev.yml 后填写本地数据库信息；实际配置已被 Git 忽略。
+# 禁止在本 Example 文件中填写真实数据库凭据、本机绝对路径或内部网络地址。
+
+tables:
+  - example_table
+db:
+  url: jdbc:mysql://127.0.0.1:3306/example_db?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
+  username: root
+  password:
+author: Enigma
+# 使用相对路径，生成结果默认输出到仓库根目录的 code-generate 目录。
+output: ./code-generate
+pkg:
+  parent: com.fnk.app.example.biz
+  module:
+swagger: true

@@ -1,0 +1,77 @@
+# 生产环境示例配置。
+# 复制为 application-prod.yml 或作为容器外部配置挂载；application-prod.yml 已被 Git 忽略。
+# 生产密码和密钥必须通过环境变量或密钥管理服务注入，禁止提交到仓库或写入镜像。
+
+logging:
+  file:
+    path: ${LOG_PATH:/app/logs}
+  config: classpath:logback-spring.xml
+  level:
+    com.fnk: "off"
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: ${MAX_FILE_SIZE:200MB}
+      max-request-size: ${MAX_REQUEST_SIZE:200MB}
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT:6379}
+      database: ${REDIS_DATABASE:0}
+      password: ${REDIS_PASSWORD}
+      timeout: 10s
+      lettuce:
+        cluster:
+          refresh:
+            adaptive: true
+            period: 60
+        pool:
+          max-active: 50
+          min-idle: 5
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:fnk-service}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+  cache:
+    type: redis
+  aop:
+    auto: true
+    proxy-target-class: true
+
+sa-token:
+  token-name: Authorization
+  timeout: ${SA_TOKEN_TIMEOUT:2592000}
+  is-read-cookie: false
+  is-concurrent: true
+  is-share: true
+  token-style: random-64
+  is-log: false
+  jwt-secret-key: ${SA_TOKEN_JWT_SECRET}
+  activity-timeout: -1
+
+mybatis-plus:
+  configuration:
+    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
+  global-config:
+    db-config:
+      id-type: assign_id
+
+service:
+  port:
+    admin: ${ADMIN_SERVER_PORT:12345}
+  api-version: 1
+  version: "@fnk-service.version@"
+
+springdoc:
+  swagger-ui:
+    enabled: ${OPENAPI_ENABLED:false}
+    doc-expansion: none
+  api-docs:
+    enabled: ${OPENAPI_ENABLED:false}
+
+knife4j:
+  enable: ${OPENAPI_ENABLED:false}
+  setting:
+    language: zh_cn

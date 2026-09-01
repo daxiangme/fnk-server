@@ -1,0 +1,24 @@
+.git
+.idea
+.vscode
+**/.DS_Store
+**/node_modules
+**/target
+/app-server/app-server-admin/dev
+/app-server/app-server-admin/prod
+/app-server/app-server-admin/logging.file.path_IS_UNDEFINED
+/frontend/dist
+/code-generate
+/docs/private
+/deploy/.env
+
+# 实际配置不得进入 Docker 构建上下文，镜像只使用公开 Example 和运行时环境变量。
+/app-server/app-server-admin/src/main/resources/application-dev.yml
+/app-server/app-server-admin/src/main/resources/application-prod.yml
+/service-code-generate/src/main/resources/generate-template*.yml
+!/service-code-generate/src/main/resources/generate-template.example.yml
+/frontend/.env
+/frontend/.env.*
+!/frontend/.env.example
+!/frontend/.env.development.example
+!/frontend/.env.production.example
