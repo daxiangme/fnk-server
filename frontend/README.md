@@ -16,7 +16,7 @@ EG Service 的管理端工程，基于 [Art Design Pro](https://github.com/Daymy
 
 当前管理端已从原有 Naive UI、UnoCSS 前端迁移到 Art Design Pro、Element Plus 和 Tailwind CSS。该迁移替换了布局、路由、状态管理接入、请求封装和业务页面基础结构，不能作为原前端的兼容性依赖升级使用。
 
-需要维护旧版前端时，请使用仓库的 `feat/naive-ui-maintenance` 分支；迁移前的固定代码基线为 `naive-ui-baseline` 标签。当前目录只维护 Art Design Pro、Element Plus 版本。
+`main` 只维护 Art Design Pro、Element Plus 版本。需要维护旧版前端时，请使用仓库的 `feat/naive-ui-maintenance` 分支；迁移前的固定代码基线为 `naive-ui-baseline` 标签。两个版本的依赖、路由和组件体系相互独立，前端代码不应直接跨版本合并。
 
 ## 技术栈
 

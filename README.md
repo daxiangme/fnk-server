@@ -58,10 +58,19 @@ service-code-generate             独立代码生成器与模板
 
 当前版本已将原有基于 Naive UI、UnoCSS 的管理端替换为 Art Design Pro、Element Plus 和 Tailwind CSS。本次升级属于前端基座迁移，不是兼容性的组件库依赖升级；旧版本的布局、路由、权限、请求封装和页面组件不能与当前版本直接混用。
 
-- `main`：合并迁移版本后作为 Art Design Pro、Element Plus 主维护分支。
-- `feat/art-design-pro-element-plus`：本次前端迁移、服务端适配和开源版本整理分支。
+- `main`：Art Design Pro、Element Plus 默认开发和主维护分支。
 - `feat/naive-ui-maintenance`：保留 Naive UI、UnoCSS 旧版，用于兼容修复和存量项目维护，不再承接默认新功能。
 - `naive-ui-baseline`：迁移前 Naive UI 完整代码的不可变基线标签。
+- `feat/art-design-pro-element-plus`：新版本开发和迁移使用的历史集成分支，合并到 `main` 后不再长期维护。
+
+| 对比项 | 当前主版本 | 旧版维护版本 |
+| --- | --- | --- |
+| 获取方式 | `main` | `feat/naive-ui-maintenance` |
+| 前端基座 | Art Design Pro | 原 Naive UI 管理端 |
+| UI 组件库 | Element Plus | Naive UI |
+| 样式体系 | Tailwind CSS | UnoCSS |
+| 维护策略 | 默认功能开发、缺陷修复和版本发布 | 存量项目兼容修复 |
+| 固定基线 | 正式发布标签 | `naive-ui-baseline` |
 
 两个前端版本拥有独立的依赖、锁文件、路由和组件体系。通用服务端修复可按兼容性选择性移植，前端页面与代码生成模板不应直接跨版本合并。
 
