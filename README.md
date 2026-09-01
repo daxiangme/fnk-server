@@ -1,5 +1,7 @@
 # 项目说明
 
+> **版本维护说明**：当前分支保留基于 Naive UI、UnoCSS 的旧版管理端，仅用于兼容修复和存量项目维护。Art Design Pro、Element Plus 新版在 `main` 和 `feat/art-design-pro-element-plus` 分支开发；迁移前的固定代码基线为 `naive-ui-baseline` 标签。两套前端的依赖、路由、组件和代码生成模板不兼容，请勿直接混用。
+
 方脑壳后台管理系统后端采用SpringBoot3.2.0全家桶前端使用vue3+ts+unocss+pinia+axios等构建而成，附带权限管理和代码生成器的实现。是一个前后端一体的开发脚手架，可以直接开箱即用。代码生成适配本前端界面的vue代码，让你的开发起飞～
 
 ## 项目截图
