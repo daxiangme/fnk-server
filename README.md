@@ -1,6 +1,6 @@
-# EG Service
+# fnk-server
 
-EG Service 是一个前后端一体的开源后台管理系统脚手架，提供用户、角色、菜单、权限、字典、消息中心、基础设施管理和代码生成等能力。
+fnk-server 是一个前后端一体的开源后台管理系统脚手架，提供用户、角色、菜单、权限、字典、消息中心、基础设施管理和代码生成等能力。
 
 ## 核心能力
 
@@ -136,7 +136,7 @@ Docker 镜像、Compose 和容器运行说明见 [`deploy/README.md`](deploy/REA
 
 ### 控制台
 
-![EG Service 控制台](doc/image/readme/dashboard.png)
+![fnk-server 控制台](doc/image/readme/dashboard.png)
 
 <table>
   <tr>
