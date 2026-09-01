@@ -17,11 +17,13 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
  * @author Enigma
@@ -58,6 +60,12 @@ public class ExceptionHandle {
     public RestResponse<String> notFound(HttpServletResponse res, NotFoundException e) {
         res.setStatus(HttpStatus.NOT_FOUND.value());
         return RestResponse.fail(e.getMessage(), null, ResponseCode.LOGIC_NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = {NoHandlerFoundException.class, NoResourceFoundException.class})
+    public RestResponse<String> routeNotFound(HttpServletResponse res, Exception e) {
+        res.setStatus(HttpStatus.NOT_FOUND.value());
+        return RestResponse.fail("接口不存在", e.getMessage(), ResponseCode.LOGIC_NOT_FOUND);
     }
 
     @ExceptionHandler(value = {BindException.class})

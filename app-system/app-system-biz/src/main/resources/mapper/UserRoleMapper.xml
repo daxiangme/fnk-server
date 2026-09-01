@@ -9,7 +9,7 @@
         <result column="role_id" property="roleId" />
     </resultMap>
     <select id="queryMenusByUserId" resultType="com.fnk.app.system.biz.dal.entity.SystemMenuDO">
-        select
+        select distinct
         sm.*
         from
         system_menu sm
@@ -17,18 +17,25 @@
         inner join user_role sur on srm.role_id = sur.role_id
         where
         sur.user_id = #{userId}
+        and srm.deleted = 0
+        and sur.deleted = 0
+        and sm.deleted = 0
+        and sm.type != 'BUTTON'
+        order by sm.order_sort asc
     </select>
     <select id="queryRoleKeyByUserId" resultType="java.lang.String">
-        select
+        select distinct
         sr.role_key
         from
         role_info sr
         inner join user_role sur on sr.id = sur.role_id
         where
         sur.user_id = #{userId}
+        and sur.deleted = 0
+        and sr.deleted = 0
     </select>
     <select id="queryPermissionKeyByUserId" resultType="java.lang.String">
-        select
+        select distinct
         sm.permission
         from
         system_menu sm
@@ -36,6 +43,9 @@
         inner join user_role sur on srm.role_id = sur.role_id
         where
         sur.user_id = #{userId}
+        and srm.deleted = 0
+        and sur.deleted = 0
+        and sm.deleted = 0
     </select>
 
 </mapper>

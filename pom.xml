@@ -20,6 +20,7 @@
         <module>service-starter</module>
         <module>service-common</module>
         <module>app-system</module>
+        <module>app-infra</module>
         <module>service-code-generate</module>
     </modules>
 
@@ -35,6 +36,7 @@
         <hutool.version>5.8.20</hutool.version>
         <lombok.version>1.18.36</lombok.version>
         <mysql-connector.version>8.0.33</mysql-connector.version>
+        <mybatis-spring.version>3.0.3</mybatis-spring.version>
         <mybatis-plus-generate.version>3.5.4.1</mybatis-plus-generate.version>
         <maven-dependency-plugin.version>3.3.0</maven-dependency-plugin.version>
         <knife4j.version>4.4.0</knife4j.version>
@@ -88,6 +90,17 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.mybatis</groupId>
+                        <artifactId>mybatis-spring</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>${mybatis-spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
@@ -162,6 +175,16 @@
             <dependency>
                 <groupId>com.fnk</groupId>
                 <artifactId>app-system-biz</artifactId>
+                <version>${fnk-service.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fnk</groupId>
+                <artifactId>app-infra-api</artifactId>
+                <version>${fnk-service.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fnk</groupId>
+                <artifactId>app-infra-biz</artifactId>
                 <version>${fnk-service.version}</version>
             </dependency>
             <dependency>

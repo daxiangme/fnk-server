@@ -69,6 +69,6 @@ public class RoleFacadeImpl implements RoleFacade {
 
     @Override
     public void remove(List<String> idList) {
-        roleInfoService.remove(idList);
+        roleInfoService.deleteByRoleIds(idList);
     }
 }

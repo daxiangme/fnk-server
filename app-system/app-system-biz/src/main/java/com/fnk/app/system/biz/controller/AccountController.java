@@ -22,12 +22,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/account")
 @Tag(name = "认证接口")
 @AllArgsConstructor
-@AnonymousApi
 public class AccountController extends BaseController {
     private final AccountFacade accountFacade;
 
     @PostMapping("/login")
     @Operation(summary = "登录")
+    @AnonymousApi
     public RestResponse<LoginVO> create(@RequestBody @Validated LoginAO dto) {
         return RestResponse.ok(accountFacade.login(dto));
     }

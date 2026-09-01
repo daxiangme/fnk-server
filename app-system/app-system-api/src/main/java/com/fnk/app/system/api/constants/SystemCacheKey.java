@@ -14,5 +14,6 @@ public class SystemCacheKey {
     public static final String ROLE_SESSION_ID = "role:";
     public static final String ROLE_SESSION_KEY = "role";
     public static final String PERMISSION_SESSION_KEY = "permission";
+    public static final String PERMISSION_VERSION_SESSION_KEY = "permissionVersion";
     public static final String AUTH_CUSTOM_SESSION_KEY = "satoken:custom:role:";
 }

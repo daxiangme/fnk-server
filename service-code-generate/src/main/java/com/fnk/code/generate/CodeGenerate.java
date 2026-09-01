@@ -17,8 +17,8 @@ import java.util.HashMap;
 
 /**
  * 代码生成器<br>
- * 使用此生成器需要将 resources/generate-template.yml 复制一份为 generate-template-dev.yml <br>
- * 根据自己的需要修改配置内的字段属性即可 <br>
+ * 使用此生成器需要将 resources/generate-template.example.yml 复制为 generate-template-dev.yml。<br>
+ * generate-template-dev.yml 仅用于本地开发，已由 Git 忽略，请勿提交数据库凭据和本机路径。<br>
  * <a href="https://baomidou.com/pages/981406/">.配置参考->代码生成器配置新 .</a>
  *
  * @author Enigma
@@ -106,6 +106,7 @@ public class CodeGenerate {
                     builder.customFile(new HashMap<String, String>() {{
                         put("index.vue", "/templates/vue-page.ftl");
                         put("entity-drawer.vue", "/templates/vue-drawer.ftl");
+                        put("api.ts", "/templates/vue-api.ftl");
                         put("facade.java", "/templates/facade.ftl");
                         put("facade-impl.java", "/templates/facade-impl.ftl");
                         put("query.java", "/templates/query.ftl");

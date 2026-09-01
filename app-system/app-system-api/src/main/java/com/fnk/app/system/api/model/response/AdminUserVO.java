@@ -21,5 +21,6 @@ public class AdminUserVO {
     private Boolean status;
     private List<String> roleIdList;
     private List<String> roles;
+    private List<String> permissions;
     private List<SystemMenuVO> menus;
 }

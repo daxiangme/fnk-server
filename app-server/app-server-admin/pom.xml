@@ -18,6 +18,10 @@
             <groupId>com.fnk</groupId>
             <artifactId>app-system-biz</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.fnk</groupId>
+            <artifactId>app-infra-biz</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -37,6 +41,14 @@
                             <Class-Path>.</Class-Path>
                         </manifestEntries>
                     </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>false</skip>
+                    <mainClass>com.fnk.app.admin.AdminApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>

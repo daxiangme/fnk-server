@@ -23,7 +23,7 @@ public interface UserRoleMapper extends BaseMapper<UserRoleDO> {
     @Delete("delete from user_role where user_id = #{userId}")
     int deleteByUserId(String userId);
 
-    @Select("select role_id from user_role where user_id = #{userId}")
+    @Select("select role_id from user_role where user_id = #{userId} and deleted = 0")
     List<String> queryRoleIdsByUserId(String userId);
 
     List<SystemMenuDO> queryMenusByUserId(String userId);

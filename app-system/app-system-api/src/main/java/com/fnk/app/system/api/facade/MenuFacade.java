@@ -26,4 +26,6 @@ public interface MenuFacade {
     void remove(String id);
 
     void remove(List<String> idList);
+
+    void refreshPermissionCache();
 }

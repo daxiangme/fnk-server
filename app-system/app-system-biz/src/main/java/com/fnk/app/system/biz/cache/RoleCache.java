@@ -1,10 +1,12 @@
 package com.fnk.app.system.biz.cache;
 
+import cn.dev33.satoken.session.SaSessionCustomUtil;
 import cn.hutool.json.JSONUtil;
 import com.fnk.app.system.api.constants.SystemCacheKey;
 import com.fnk.common.tools.utils.RedisUtils;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 角色相关缓存
@@ -80,6 +82,31 @@ public class RoleCache {
      * @param roleKey 角色key
      */
     public static void deleteSaTokenRoleCache(String roleKey) {
+        SaSessionCustomUtil.deleteSessionById(SystemCacheKey.ROLE_SESSION_ID + roleKey);
         RedisUtils.getINSTANCE().del(SystemCacheKey.AUTH_CUSTOM_SESSION_KEY + roleKey);
+    }
+
+    public static void resetAllRolePermissionCache() {
+        Set<String> keys = RedisUtils.getINSTANCE().getRedisTemplate().keys(SystemCacheKey.ROLE_PERMISSION + "*");
+        if (keys != null && !keys.isEmpty()) {
+            RedisUtils.getINSTANCE().del(keys);
+        }
+    }
+
+    public static void deleteAllSaTokenRoleCache() {
+        deleteSaTokenKeys(SystemCacheKey.AUTH_CUSTOM_SESSION_KEY + "*");
+        deleteSaTokenKeys("*custom:session:" + SystemCacheKey.ROLE_SESSION_ID + "*");
+    }
+
+    public static void resetAllPermissionCaches() {
+        resetAllRolePermissionCache();
+        deleteAllSaTokenRoleCache();
+    }
+
+    private static void deleteSaTokenKeys(String pattern) {
+        Set<String> keys = RedisUtils.getINSTANCE().getRedisTemplate().keys(pattern);
+        if (keys != null && !keys.isEmpty()) {
+            RedisUtils.getINSTANCE().del(keys);
+        }
     }
 }

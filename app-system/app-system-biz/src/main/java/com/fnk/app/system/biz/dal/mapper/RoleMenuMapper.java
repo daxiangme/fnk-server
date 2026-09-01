@@ -26,7 +26,14 @@ public interface RoleMenuMapper extends BaseMapper<RoleMenuDO> {
     @Delete("delete from role_menu where role_id = #{roleId}")
     int deleteByRoleId(String roleId);
 
-    @Select("select menu_id from role_menu where role_id = #{roleId}")
+    @Select("""
+            select srm.menu_id
+            from role_menu srm
+            inner join system_menu sm on sm.id = srm.menu_id
+            where srm.role_id = #{roleId}
+            and srm.deleted = 0
+            and sm.deleted = 0
+            """)
     List<String> queryMenuIdByRoleId(String roleId);
 
     /**

@@ -64,11 +64,11 @@ public class AdminUserFacadeImpl implements AdminUserFacade {
 
     @Override
     public void remove(String id) {
-        adminUserService.removeSingle(id);
+        adminUserService.deleteAdminUser(id);
     }
 
     @Override
     public void remove(List<String> idList) {
-        adminUserService.remove(idList);
+        adminUserService.deleteAdminUsers(idList);
     }
 }

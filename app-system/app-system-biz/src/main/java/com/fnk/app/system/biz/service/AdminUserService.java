@@ -13,6 +13,7 @@ import com.fnk.starter.web.enums.GenderType;
 import com.fnk.app.system.biz.cache.RoleCache;
 import com.fnk.app.system.api.model.request.LoginAO;
 import com.fnk.app.system.biz.dal.entity.AdminUserDO;
+import com.fnk.app.system.biz.dal.entity.SystemMenuDO;
 import com.fnk.app.system.biz.dal.mapper.AdminUserMapper;
 import com.fnk.app.system.api.model.response.AdminUserVO;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 系统用户 服务实现层
@@ -33,6 +35,8 @@ public class AdminUserService extends BaseService<AdminUserMapper, AdminUserDO> 
 
 
     private UserRoleService userRoleService;
+    private RoleInfoService roleInfoService;
+    private SystemMenuService systemMenuService;
 
 
 
@@ -61,11 +65,14 @@ public class AdminUserService extends BaseService<AdminUserMapper, AdminUserDO> 
         return adminUser;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public AdminUserDO updateAdminUser(AdminUserDO adminUser) {
         AssertUtils.isTrue(isPhoneExist(adminUser.getPhone(), adminUser.getId()), "手机号码已存在！");
-        if (adminUser.getPassword() != null) {
+        if (adminUser.getPassword() != null && !adminUser.getPassword().isBlank()) {
             adminUser.setSalt(SaltUtils.getSalt(4));
             adminUser.setPassword(encryptPassword(adminUser.getPassword(), adminUser.getSalt()));
+        } else {
+            adminUser.setPassword(null);
         }
         AssertUtils.isFalse(this.updateById(adminUser), "更新用户失败！");
         userRoleService.deleteByUserId(adminUser.getId());
@@ -73,6 +80,20 @@ public class AdminUserService extends BaseService<AdminUserMapper, AdminUserDO> 
         // 强制退出被修改的用户使其重新登录
         logout(adminUser.getId());
         return adminUser;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteAdminUser(String userId) {
+        userRoleService.deleteByUserId(userId);
+        this.removeSingle(userId);
+        logout(userId);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteAdminUsers(List<String> userIds) {
+        userRoleService.deleteByUserIds(userIds);
+        this.remove(userIds);
+        userIds.forEach(this::logout);
     }
 
     public AdminUserDO queryDetail(String userId) {
@@ -109,14 +130,30 @@ public class AdminUserService extends BaseService<AdminUserMapper, AdminUserDO> 
         if (userId != null) {
             wrapper.ne(AdminUserDO::getId, userId);
         }
-        return this.count(wrapper) > 1;
+        return this.count(wrapper) > 0;
     }
 
     public AdminUserVO getCurrentAdminInfo(String Id) {
         AdminUserDO adminUser = this.getById(Id);
         AssertUtils.isNull(adminUser, "用户信息不存在！");
         AdminUserVO adminUserVO = SystemConvert.toAdminUserVO(adminUser);
-        adminUserVO.setMenus(SystemConvert.toSystemMenuVOList(userRoleService.queryMenusByUserId(adminUser.getId())));
+        List<String> roles = userRoleService.queryRoleKey(adminUser.getId());
+        boolean hasWildcardPermission = roleInfoService.hasWildcardPermission(roles);
+        List<SystemMenuDO> menus = hasWildcardPermission
+                ? systemMenuService.listAllAuthorizedMenus()
+                : userRoleService.queryMenusByUserId(adminUser.getId());
+        adminUserVO.setMenus(SystemConvert.toSystemMenuVOList(menus));
+        adminUserVO.setRoles(roles);
+        adminUserVO.setRoleIdList(userRoleService.queryRoleIdsByUserId(adminUser.getId()));
+        List<String> permissions = hasWildcardPermission
+                ? buildWildcardPermissionKeys()
+                : userRoleService.queryPermissionKeyByUserId(adminUser.getId());
+        adminUserVO.setPermissions(permissions
+                .stream()
+                .filter(Objects::nonNull)
+                .filter(permission -> !permission.isBlank())
+                .distinct()
+                .toList());
         return adminUserVO;
     }
 
@@ -143,5 +180,9 @@ public class AdminUserService extends BaseService<AdminUserMapper, AdminUserDO> 
         loginVO.setTokenActivityTimeout(tokenInfo.getTokenActivityTimeout());
         loginVO.setLoginDevice(tokenInfo.getLoginDevice());
         return loginVO;
+    }
+
+    private List<String> buildWildcardPermissionKeys() {
+        return systemMenuService.listAllPermissionKeys();
     }
 }

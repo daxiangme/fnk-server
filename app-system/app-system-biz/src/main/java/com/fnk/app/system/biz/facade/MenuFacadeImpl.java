@@ -6,6 +6,7 @@ import com.fnk.app.system.api.model.query.MenuQuery;
 import com.fnk.app.system.api.model.request.MenuCreateAO;
 import com.fnk.app.system.api.model.request.MenuUpdateAO;
 import com.fnk.app.system.api.model.response.SystemMenuVO;
+import com.fnk.app.system.biz.cache.RoleCache;
 import com.fnk.app.system.biz.convert.SystemConvert;
 import com.fnk.app.system.biz.dal.entity.SystemMenuDO;
 import com.fnk.app.system.biz.service.SystemMenuService;
@@ -45,21 +46,32 @@ public class MenuFacadeImpl implements MenuFacade {
 
     @Override
     public SystemMenuVO create(MenuCreateAO req) {
-        return SystemConvert.toSystemMenuVO(systemMenuService.create(SystemConvert.toSystemMenuDO(req)));
+        SystemMenuVO result = SystemConvert.toSystemMenuVO(systemMenuService.create(SystemConvert.toSystemMenuDO(req)));
+        RoleCache.resetAllPermissionCaches();
+        return result;
     }
 
     @Override
     public SystemMenuVO update(String id, MenuUpdateAO req) {
-        return SystemConvert.toSystemMenuVO(systemMenuService.update(id, SystemConvert.toSystemMenuDO(req)));
+        SystemMenuVO result = SystemConvert.toSystemMenuVO(systemMenuService.update(id, SystemConvert.toSystemMenuDO(req)));
+        RoleCache.resetAllPermissionCaches();
+        return result;
     }
 
     @Override
     public void remove(String id) {
-        systemMenuService.removeSingle(id);
+        systemMenuService.deleteMenu(id);
+        RoleCache.resetAllPermissionCaches();
     }
 
     @Override
     public void remove(List<String> idList) {
-        systemMenuService.remove(idList);
+        systemMenuService.deleteMenus(idList);
+        RoleCache.resetAllPermissionCaches();
+    }
+
+    @Override
+    public void refreshPermissionCache() {
+        RoleCache.resetAllPermissionCaches();
     }
 }

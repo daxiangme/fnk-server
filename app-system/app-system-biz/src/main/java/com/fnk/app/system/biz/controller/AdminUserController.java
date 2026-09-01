@@ -38,30 +38,35 @@ public class AdminUserController extends BaseController {
 
     @GetMapping("/{id}")
     @Operation(summary = "获取指定ID系统用户的详情")
+    @SaCheckPermission("system:user:view")
     public RestResponse<AdminUserVO> detail(@PathVariable String id) {
         return RestResponse.ok(adminUserFacade.detail(id));
     }
 
     @GetMapping("/{id}/roles")
     @Operation(summary = "获取指定ID系统用户的角色ID列表")
+    @SaCheckPermission("system:user:view")
     public RestResponse<List<String>> queryUserRoleIds(@PathVariable String id) {
         return RestResponse.ok(adminUserFacade.queryUserRoleIds(id));
     }
 
     @PostMapping
     @Operation(summary = "创建系统用户")
+    @SaCheckPermission("system:user:create")
     public RestResponse<AdminUserVO> create(@RequestBody @Validated AdminUserCreateAO req) {
         return RestResponse.ok(adminUserFacade.create(req));
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "更新指定ID的系统用户")
+    @SaCheckPermission("system:user:update")
     public RestResponse<AdminUserVO> update(@PathVariable String id, @RequestBody @Validated AdminUserUpdateAO req) {
         return RestResponse.ok(adminUserFacade.update(id, req));
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "删除指定ID的系统用户")
+    @SaCheckPermission("system:user:delete")
     public RestResponse<Void> remove(@PathVariable String id) {
         adminUserFacade.remove(id);
         return RestResponse.ok();
@@ -69,6 +74,7 @@ public class AdminUserController extends BaseController {
 
     @DeleteMapping
     @Operation(summary = "批量删除指定ID的系统用户")
+    @SaCheckPermission("system:user:delete")
     public RestResponse<Void> remove(@RequestParam("id-list") List<String> idList) {
         adminUserFacade.remove(idList);
         return RestResponse.ok();

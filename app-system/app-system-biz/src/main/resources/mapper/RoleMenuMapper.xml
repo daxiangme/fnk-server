@@ -9,16 +9,18 @@
         <result column="menu_id" property="menuId" />
     </resultMap>
     <select id="queryPermissionKeyByRoleId" resultType="java.lang.String">
-        select
+        select distinct
         sm.permission
         from
         system_menu sm
         inner join role_menu srm on sm.id = srm.menu_id
         where
         srm.role_id = #{roleId}
+        and srm.deleted = 0
+        and sm.deleted = 0
     </select>
     <select id="queryPermissionKeyByRoleKey" resultType="java.lang.String">
-        select
+        select distinct
         sm.permission
         from
         system_menu sm
@@ -26,6 +28,9 @@
         inner join role_info sr on sr.id = srm.role_id
         where
         sr.role_key = #{roleKey}
+        and srm.deleted = 0
+        and sm.deleted = 0
+        and sr.deleted = 0
     </select>
 
 </mapper>
